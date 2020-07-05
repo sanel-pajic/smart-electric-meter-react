@@ -28,6 +28,7 @@ const useStyles = makeStyles({
     marginTop: "1%",
   },
   tableMedia: {},
+  tableColumn: { fontSize: 18 },
 });
 
 function ccyFormat(num: number) {
@@ -78,29 +79,44 @@ export const TableMeterData: React.FC = () => {
       >
         <TableHead>
           <TableRow>
-            <TableCell align="left">
-              <Typography variant="h6">Date</Typography>
-            </TableCell>
-            <TableCell align="left">
-              <Typography variant="h6">Reading Month</Typography>
-            </TableCell>
-            <TableCell align="left">
-              <Typography variant="h6">Initial Meter Value</Typography>
+            <TableCell align="center">
+              <Typography className={classes.tableColumn}>Date</Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography variant="h6">Reading Meter Value</Typography>
+              <Typography className={classes.tableColumn}>
+                Reading Month/Year
+              </Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography variant="h6">Consumption kWh</Typography>
+              <Typography className={classes.tableColumn}>
+                Initial Meter Value
+              </Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography variant="h6">Price kWh</Typography>
+              <Typography className={classes.tableColumn}>
+                Reading Meter Value
+              </Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography variant="h6">Total (BAM) </Typography>
+              <Typography className={classes.tableColumn}>
+                Consumption (A) kWh
+              </Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography variant="h6">Action </Typography>
+              <Typography className={classes.tableColumn}>
+                Network fee (B) kWh
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography className={classes.tableColumn}>Price kWh</Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography className={classes.tableColumn}>
+                Total Price (A+B) BAM
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography className={classes.tableColumn}>Action </Typography>
             </TableCell>
           </TableRow>
         </TableHead>
