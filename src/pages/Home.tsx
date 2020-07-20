@@ -16,23 +16,16 @@ import {
 import { TableMeterData } from "../components/TableMeterData";
 import meter from "../images/meter.jpg";
 import { DatePickerComponent } from "../components/DatePickerComponent";
-// import mongoID from "bson-objectid";
-// import { useQuery, useMutation } from "@apollo/react-hooks";
-// import * as yup from "yup";
-// import { Redirect } from "react-router";
-// import { CircularLoading } from "../components/CircularLoading";
-// import { TableArticles } from "../components/TableArticles";
-// import { ARTICLES_QUERY } from "../graphql-queries-mutations/queries";
-// import { ADD_MUTATION_ARTICLE } from "../graphql-queries-mutations/mutations";
-// import { ModalError } from "../components/ModalError";
+import mongoID from "bson-objectid";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import * as yup from "yup";
+import { CircularLoading } from "../components/CircularLoading";
+import { READINGS_QUERY } from "../graphql-queries-mutations/queries";
+import { ADD_METER_READING } from "../graphql-queries-mutations/mutations";
 
-// let schema = yup.object().shape({
-//   code: yup.string().required().min(5),
-//   description: yup.string().required().min(5),
-//   quantity: yup.number().required().min(1),
-//   price: yup.number().required().min(1),
-// });
-import gray from "@material-ui/core/colors/red";
+let schema = yup.object().shape({
+  readingMeterValue: yup.number().required().min(5),
+});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -149,9 +142,25 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Home: React.FC = () => {
   const classes = useStyles();
-  const [quantity, setQuantity] = useState("");
+  const [readingMeterValue, setReadingMeterValue] = useState("");
+  const [date, setDate] = useState<Date | null>(new Date());
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
+  const { data, loading } = useQuery(READINGS_QUERY, {
+    fetchPolicy: "cache-and-network",
+  });
+
+  const [addMeterReading, { error }] = useMutation(ADD_METER_READING, {
+    errorPolicy: "all",
+  });
+  if (error) {
+    console.log("error", error);
+  }
+
+  if (loading || !data) {
+    return <CircularLoading />;
+  }
 
   return (
     <div className={classes.rootDiv}>
@@ -188,7 +197,7 @@ export const Home: React.FC = () => {
                   alignItems="center"
                 >
                   <Grid item xs="auto">
-                    <DatePickerComponent />
+                    <DatePickerComponent date={date} onDateChange={setDate} />
                   </Grid>
 
                   <Grid item xs="auto">
@@ -207,8 +216,8 @@ export const Home: React.FC = () => {
                           matches ? classes.quantity : classes.quantityMedia
                         }
                         color="secondary"
-                        value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
+                        value={readingMeterValue}
+                        onChange={(e) => setReadingMeterValue(e.target.value)}
                       />
                     </form>
                   </Grid>
@@ -220,40 +229,37 @@ export const Home: React.FC = () => {
                       className={
                         matches ? classes.addButton : classes.addButtonMedia
                       }
-                      //   onClick={(e) => {
-                      //     e.preventDefault();
-                      //     setCode("");
-                      //     setDescription("");
-                      //     setQuantity("");
-                      //     setPrice("");
-                      //     try {
-                      //       const valid = schema.validateSync({
-                      //         code,
-                      //         description,
-                      //         quantity,
-                      //         price,
-                      //       });
-                      //       console.log("VALID", valid);
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setReadingMeterValue("");
+                        try {
+                          const valid = schema.validateSync({
+                            readingMeterValue,
+                          });
+                          console.log("VALID", valid);
 
-                      //       addComponentArticle({
-                      //         variables: {
-                      //           data: {
-                      //             _id: mongoID.generate(),
-                      //             code,
-                      //             description,
-                      //             quantity,
-                      //             price,
-                      //             author: userId,
-                      //           },
-                      //         },
-                      //         refetchQueries: [{ query: ARTICLES_QUERY }],
-                      //       }).catch((error) =>
-                      //         console.log("ERROR ADD ARTICLE", error)
-                      //       );
-                      //     } catch (error) {
-                      //       alert(error);
-                      //     }
-                      //   }}
+                          addMeterReading({
+                            variables: {
+                              data: {
+                                _id: mongoID.generate(),
+                                date,
+                                // initialMeterValue,
+                                readingMeterValue,
+                                // consumption,
+                                // networkFee,
+                                // price,
+                                // totalPrice,
+                                // author,
+                              },
+                            },
+                            refetchQueries: [{ query: READINGS_QUERY }],
+                          }).catch((error) =>
+                            console.log("ERROR ADD ARTICLE", error)
+                          );
+                        } catch (error) {
+                          alert(error);
+                        }
+                      }}
                     >
                       Add Reading
                     </Button>

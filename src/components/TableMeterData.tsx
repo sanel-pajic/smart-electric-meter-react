@@ -13,14 +13,12 @@ import {
   useMediaQuery,
 } from "@material-ui/core";
 
-// import { useQuery, useMutation } from "@apollo/react-hooks";
-// import { CircularLoading } from "../components/CircularLoading";
-// import { ErrorLoading } from "./ErrorLoading";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { CircularLoading } from "../components/CircularLoading";
+import { ErrorLoading } from "./ErrorLoading";
 import DeleteIcon from "@material-ui/icons/Delete";
-// import { ARTICLES_QUERY } from "../graphql-queries-mutations/queries";
-// import { REMOVE_ARTICLE_MUTATION } from "../graphql-queries-mutations/mutations";
-
-const TAX_RATE = 0.1;
+import { READINGS_QUERY } from "../graphql-queries-mutations/queries";
+import { REMOVE_METER_READING } from "../graphql-queries-mutations/mutations";
 
 const useStyles = makeStyles({
   table: {
@@ -41,20 +39,18 @@ export const TableMeterData: React.FC = () => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
-  //   const { data, loading } = useQuery(ARTICLES_QUERY, {
-  //     fetchPolicy: "cache-and-network",
-  //   });
+  const { data, loading } = useQuery(READINGS_QUERY, {
+    fetchPolicy: "cache-and-network",
+  });
 
-  //   const [removeComponentArticle, { error }] = useMutation(
-  //     REMOVE_ARTICLE_MUTATION
-  //   );
-  //   if (loading || !data) {
-  //     return <CircularLoading />;
-  //   }
-  //   if (error) {
-  //     console.log("error", error);
-  //     return <ErrorLoading />;
-  //   }
+  const [removeMeterReading, { error }] = useMutation(REMOVE_METER_READING);
+  if (loading || !data) {
+    return <CircularLoading />;
+  }
+  if (error) {
+    console.log("error", error);
+    return <ErrorLoading />;
+  }
 
   //   const invoiceSubtotal = data.componentArticles
   //     .map(
@@ -70,6 +66,59 @@ export const TableMeterData: React.FC = () => {
 
   //   const invoiceTaxes = TAX_RATE * invoiceSubtotal;
   //   const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+
+  console.log("DATA", data);
+
+  function handleMonthYear(dateString: string) {
+    var date = new Date(dateString);
+    let dd = date.getDate();
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    let mm = date.getMonth() + 1;
+    let month = monthNames[date.getMonth()];
+    let yyyy = date.getFullYear();
+    if (dd < 10) {
+      // @ts-ignore
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      // @ts-ignore
+      mm = "0" + mm;
+    }
+
+    const convertedDate = month + " / " + yyyy;
+    return convertedDate;
+  }
+
+  function handleDate(dateString: string) {
+    var date = new Date(dateString);
+    let dd = date.getDate();
+    let mm = date.getMonth() + 1;
+    let yyyy = date.getFullYear();
+    if (dd < 10) {
+      // @ts-ignore
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      // @ts-ignore
+      mm = "0" + mm;
+    }
+
+    const fullDate = dd + "." + mm + "." + yyyy;
+    return fullDate;
+  }
 
   return (
     <TableContainer component={Paper}>
@@ -121,28 +170,38 @@ export const TableMeterData: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* {data.componentArticles.map(
-            (article: {
+          {data.meterReadings.map(
+            (reading: {
               _id: string;
-              code: string;
-              description: string;
-              quantity: number;
+              date: string;
+              initialMeterValue: string;
+              readingMeterValue: string;
+              consumption: number;
+              networkFee: number;
               price: number;
+              totalPrice: number;
             }) => (
-              <TableRow key={article._id}>
-                <TableCell>{article.code}</TableCell>
-                <TableCell align="left">{article.description}</TableCell>
-                <TableCell align="center">{article.quantity}</TableCell>
-                <TableCell align="center">{ccyFormat(article.price)}</TableCell>
+              <TableRow key={reading._id}>
+                <TableCell align="center">{handleDate(reading.date)}</TableCell>
                 <TableCell align="center">
-                  {ccyFormat(article.price * article.quantity)}
+                  {handleMonthYear(reading.date)}
                 </TableCell>
+                <TableCell align="center">
+                  {reading.initialMeterValue}
+                </TableCell>
+                <TableCell align="center">
+                  {reading.readingMeterValue}
+                </TableCell>
+                <TableCell align="center">{reading.consumption}</TableCell>
+                <TableCell align="center">{reading.networkFee}</TableCell>
+                <TableCell align="center">{ccyFormat(reading.price)}</TableCell>
+                <TableCell align="center">{reading.totalPrice}</TableCell>
                 <TableCell align="center">
                   <IconButton
                     onClick={() =>
-                      removeComponentArticle({
-                        variables: { _id: article._id },
-                        refetchQueries: [{ query: ARTICLES_QUERY }],
+                      removeMeterReading({
+                        variables: { _id: reading._id },
+                        refetchQueries: [{ query: READINGS_QUERY }],
                       })
                     }
                   >
@@ -151,7 +210,7 @@ export const TableMeterData: React.FC = () => {
                 </TableCell>
               </TableRow>
             )
-          )} */}
+          )}
         </TableBody>
       </Table>
     </TableContainer>

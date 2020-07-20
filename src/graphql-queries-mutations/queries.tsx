@@ -2,20 +2,17 @@ import gql from "graphql-tag";
 
 // Query for displaying all blog posts
 
-export const BLOGS_QUERY = gql`
+export const READINGS_QUERY = gql`
   query {
-    blogPosts {
+    meterReadings {
       _id
-      title
-      description_short
-      description
-      image
-      author
-      likes {
-        _id
-        blogId
-        userId
-      }
+      date
+      initialMeterValue
+      readingMeterValue
+      consumption
+      networkFee
+      price
+      totalPrice
     }
   }
 `;

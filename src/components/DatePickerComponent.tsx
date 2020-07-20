@@ -6,7 +6,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import lightBlue from "@material-ui/core/colors/lightBlue";
+import { lightBlue } from "@material-ui/core/colors";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core";
 
@@ -46,30 +46,22 @@ const materialTheme = createMuiTheme({
   },
 });
 
-export const DatePickerComponent: React.FC = () => {
-  var currentDate = new Date();
-
-  console.log("DATE", currentDate.toString());
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    currentDate
-  );
-
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
-
+export const DatePickerComponent: React.FC<{
+  date: Date | null;
+  onDateChange: (date: Date | null) => void;
+}> = ({ date, onDateChange }) => {
   return (
     <ThemeProvider theme={materialTheme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container justify="space-around">
           <KeyboardDatePicker
-            color="secondary"
+            clearable
             margin="normal"
             id="date-picker-dialog"
             label="Date"
             format="dd/MM/yyyy"
-            value={selectedDate}
-            onChange={handleDateChange}
+            value={date}
+            onChange={onDateChange}
             KeyboardButtonProps={{
               "aria-label": "change date",
             }}
