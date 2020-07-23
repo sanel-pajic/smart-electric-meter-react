@@ -50,6 +50,7 @@ export const CURRENT_USER_QUERY = gql`
       first_name
       last_name
       email
+      isAdmin
     }
   }
 `;

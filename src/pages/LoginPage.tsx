@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -11,10 +11,10 @@ import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import { useMutation } from "@apollo/react-hooks";
 import { LOGIN_MUTATION } from "../graphql-queries-mutations/mutations";
 import { useHistory } from "react-router-dom";
-import { store } from "../components/store";
 import { useMediaQuery, TextField } from "@material-ui/core";
 import logo from "../images/icon_logo.png";
 import Modal from "@material-ui/core/Modal";
+import { CurrentUserContext } from "../App";
 
 const ValidationTextField = withStyles({
   root: {
@@ -136,6 +136,10 @@ export const LoginPage: React.FC = () => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
+  const { first_name, last_name, setAuthorized } = useContext(
+    CurrentUserContext
+  );
+
   const [modalStyle] = React.useState(getModalStyle);
   const [open] = React.useState(true);
 
@@ -144,6 +148,14 @@ export const LoginPage: React.FC = () => {
   if (error) {
     console.log("error", error);
   }
+
+  console.log(
+    "DATA FROM CURRENT USER CONTEXT",
+    " First Name:",
+    first_name,
+    " Last Name:",
+    last_name
+  );
 
   return (
     <Modal
@@ -222,10 +234,8 @@ export const LoginPage: React.FC = () => {
                   .then((res) => {
                     localStorage.setItem("token", res.data.login.token);
                     localStorage.setItem("userId", res.data.login.userId);
-                    history.push("/authorize");
-                    store.setState({
-                      authorized: true,
-                    });
+                    history.push("/app");
+                    setAuthorized(true);
                   })
                   .catch((error) => {
                     console.log("ERROR", error);

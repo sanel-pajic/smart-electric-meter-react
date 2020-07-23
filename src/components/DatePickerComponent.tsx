@@ -38,11 +38,6 @@ const materialTheme = createMuiTheme({
         color: lightBlue["900"],
       },
     },
-    MuiPickersModal: {
-      dialogAction: {
-        color: lightBlue["400"],
-      },
-    },
   },
 });
 

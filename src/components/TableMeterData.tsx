@@ -35,7 +35,6 @@ function ccyFormat(num: number) {
 
 export const TableMeterData: React.FC = () => {
   const classes = useStyles();
-
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
@@ -51,23 +50,6 @@ export const TableMeterData: React.FC = () => {
     console.log("error", error);
     return <ErrorLoading />;
   }
-
-  //   const invoiceSubtotal = data.componentArticles
-  //     .map(
-  //       (article: {
-  //         _id: string;
-  //         code: string;
-  //         description: string;
-  //         quantity: number;
-  //         price: number;
-  //       }) => article.price * article.quantity
-  //     )
-  //     .reduce((acc: number, val: number) => acc + val, 0);
-
-  //   const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-  //   const invoiceTotal = invoiceTaxes + invoiceSubtotal;
-
-  console.log("DATA", data);
 
   function handleMonthYear(dateString: string) {
     var date = new Date(dateString);
@@ -161,7 +143,7 @@ export const TableMeterData: React.FC = () => {
             </TableCell>
             <TableCell align="center">
               <Typography className={classes.tableColumn}>
-                Total Price (A+B) BAM
+                Total (A+B) BAM
               </Typography>
             </TableCell>
             <TableCell align="center">
@@ -194,8 +176,10 @@ export const TableMeterData: React.FC = () => {
                 </TableCell>
                 <TableCell align="center">{reading.consumption}</TableCell>
                 <TableCell align="center">{reading.networkFee}</TableCell>
-                <TableCell align="center">{ccyFormat(reading.price)}</TableCell>
-                <TableCell align="center">{reading.totalPrice}</TableCell>
+                <TableCell align="center">{reading.price}</TableCell>
+                <TableCell align="center">
+                  {ccyFormat(reading.totalPrice)}
+                </TableCell>
                 <TableCell align="center">
                   <IconButton
                     onClick={() =>

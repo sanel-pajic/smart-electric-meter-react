@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Paper,
   Button,
@@ -6,6 +6,7 @@ import {
   Grid,
   useMediaQuery,
   TextField,
+  Divider,
 } from "@material-ui/core";
 import {
   createStyles,
@@ -22,9 +23,11 @@ import * as yup from "yup";
 import { CircularLoading } from "../components/CircularLoading";
 import { READINGS_QUERY } from "../graphql-queries-mutations/queries";
 import { ADD_METER_READING } from "../graphql-queries-mutations/mutations";
+import { CurrentUserContext } from "../App";
 
 let schema = yup.object().shape({
   readingMeterValue: yup.number().required().min(5),
+  // .test("Meter Value", "Must be exactly 5 characters", (val) => val.length === 5),
 });
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -137,15 +140,21 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "relative",
       top: 35,
     },
+    dividerHome: { width: "100%", marginTop: 20 },
   })
 );
 
 export const Home: React.FC = () => {
   const classes = useStyles();
-  const [readingMeterValue, setReadingMeterValue] = useState("");
+  const [readingMeterValue, setReadingMeterValue] = useState<number | string>(
+    ""
+  );
   const [date, setDate] = useState<Date | null>(new Date());
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
+  const currentUser: string | null = localStorage.getItem("userId");
+
+  const { first_name, last_name } = useContext(CurrentUserContext);
 
   const { data, loading } = useQuery(READINGS_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -154,6 +163,7 @@ export const Home: React.FC = () => {
   const [addMeterReading, { error }] = useMutation(ADD_METER_READING, {
     errorPolicy: "all",
   });
+
   if (error) {
     console.log("error", error);
   }
@@ -161,6 +171,22 @@ export const Home: React.FC = () => {
   if (loading || !data) {
     return <CircularLoading />;
   }
+
+  var lastReading = data.meterReadings[data.meterReadings.length - 1];
+
+  const readingMeterValueNEW = lastReading.readingMeterValue;
+
+  const priceNEW = lastReading.price;
+
+  console.log(
+    "DATA FROM CURRENT USER CONTEXT",
+    " First Name:",
+    first_name,
+    " Last Name:",
+    last_name
+  );
+
+  console.log("CURRENT USER", currentUser);
 
   return (
     <div className={classes.rootDiv}>
@@ -237,19 +263,23 @@ export const Home: React.FC = () => {
                             readingMeterValue,
                           });
                           console.log("VALID", valid);
+                          const consumptionNew =
+                            //@ts-ignore
+                            readingMeterValue - readingMeterValueNEW;
+                          const totalPriceNEW = consumptionNew * priceNEW * 2;
 
                           addMeterReading({
                             variables: {
                               data: {
                                 _id: mongoID.generate(),
                                 date,
-                                // initialMeterValue,
+                                initialMeterValue: readingMeterValueNEW,
                                 readingMeterValue,
-                                // consumption,
-                                // networkFee,
-                                // price,
-                                // totalPrice,
-                                // author,
+                                consumption: consumptionNew,
+                                networkFee: consumptionNew,
+                                price: priceNEW,
+                                totalPrice: totalPriceNEW,
+                                author: "5e4982f7ddb59a59a81dd820",
                               },
                             },
                             refetchQueries: [{ query: READINGS_QUERY }],
@@ -293,6 +323,7 @@ export const Home: React.FC = () => {
         >
           List of all Meter readings by date
         </Typography>
+        <Divider className={classes.dividerHome} />
         <TableMeterData />
       </Paper>
     </div>

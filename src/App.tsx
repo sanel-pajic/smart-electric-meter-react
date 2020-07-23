@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Home } from "./pages/Home";
 import { Error } from "./pages/Error";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
@@ -34,26 +34,63 @@ export const client = new ApolloClient({
   },
 });
 
+export const CurrentUserContext = React.createContext<{
+  userId: string;
+  token: string;
+  authorized: boolean;
+  first_name: string;
+  last_name: string;
+  setAuthorized: Function;
+}>({
+  userId: "",
+  token: "",
+  first_name: "",
+  last_name: "",
+  authorized: false,
+  setAuthorized: () => {},
+});
+
 const App: React.FC = () => {
+  const [
+    { userId, token, first_name, last_name, authorized },
+    setAuthorized,
+  ] = useState({
+    userId: "",
+    token: "",
+    first_name: "",
+    last_name: "",
+    authorized: false,
+  });
   return (
-    <ApolloProvider client={client}>
-      <div>
-        <BrowserRouter>
-          <Header />
+    <CurrentUserContext.Provider
+      value={{
+        userId,
+        token,
+        first_name,
+        last_name,
+        authorized,
+        setAuthorized,
+      }}
+    >
+      <ApolloProvider client={client}>
+        <div>
+          <BrowserRouter>
+            <Header />
 
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={LoginPage} />
+            <Switch>
+              <Route exact path="/" component={LoginPage} />
+              <Route exact path="/app" component={Home} />
 
-            <Route render={() => <Error />} />
-          </Switch>
-          <Footer
-            title="Created by Sanel Pajic"
-            description="Smart Electric Meter App"
-          />
-        </BrowserRouter>
-      </div>
-    </ApolloProvider>
+              <Route render={() => <Error />} />
+            </Switch>
+            <Footer
+              title="Created by Sanel Pajic"
+              description="Smart Electric Meter App"
+            />
+          </BrowserRouter>
+        </div>
+      </ApolloProvider>
+    </CurrentUserContext.Provider>
   );
 };
 
