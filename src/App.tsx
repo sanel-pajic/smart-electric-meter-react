@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Home } from "./pages/Home";
+import React, { useState, useMemo } from "react";
+import { HomePage } from "./pages/HomePage";
 import { Error } from "./pages/Error";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Header } from "./components/Header";
@@ -7,6 +7,7 @@ import { Footer } from "./components/Footer";
 import { LoginPage } from "./pages/LoginPage";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
+import { AuthorizePage } from "./pages/AuthorizePage";
 
 export const client = new ApolloClient({
   uri: "http://localhost:8000/graphql",
@@ -61,17 +62,14 @@ const App: React.FC = () => {
     last_name: "",
     authorized: false,
   });
+
+  const providerValue = useMemo(
+    () => ({ userId, token, first_name, last_name, authorized, setAuthorized }),
+    [userId, token, first_name, last_name, authorized, setAuthorized]
+  );
+
   return (
-    <CurrentUserContext.Provider
-      value={{
-        userId,
-        token,
-        first_name,
-        last_name,
-        authorized,
-        setAuthorized,
-      }}
-    >
+    <CurrentUserContext.Provider value={providerValue}>
       <ApolloProvider client={client}>
         <div>
           <BrowserRouter>
@@ -79,8 +77,8 @@ const App: React.FC = () => {
 
             <Switch>
               <Route exact path="/" component={LoginPage} />
-              <Route exact path="/app" component={Home} />
-
+              <Route exact path="/home" component={HomePage} />
+              <Route exact path="/authorize" component={AuthorizePage} />
               <Route render={() => <Error />} />
             </Switch>
             <Footer

@@ -15,6 +15,7 @@ import { useMediaQuery, TextField } from "@material-ui/core";
 import logo from "../images/icon_logo.png";
 import Modal from "@material-ui/core/Modal";
 import { CurrentUserContext } from "../App";
+import { store } from "../components/store";
 
 const ValidationTextField = withStyles({
   root: {
@@ -136,9 +137,7 @@ export const LoginPage: React.FC = () => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const { first_name, last_name, setAuthorized } = useContext(
-    CurrentUserContext
-  );
+  const { setAuthorized } = useContext(CurrentUserContext);
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open] = React.useState(true);
@@ -148,14 +147,6 @@ export const LoginPage: React.FC = () => {
   if (error) {
     console.log("error", error);
   }
-
-  console.log(
-    "DATA FROM CURRENT USER CONTEXT",
-    " First Name:",
-    first_name,
-    " Last Name:",
-    last_name
-  );
 
   return (
     <Modal
@@ -234,8 +225,14 @@ export const LoginPage: React.FC = () => {
                   .then((res) => {
                     localStorage.setItem("token", res.data.login.token);
                     localStorage.setItem("userId", res.data.login.userId);
-                    history.push("/app");
                     setAuthorized(true);
+                    history.push("/authorize");
+                    store.setState({
+                      authorized: true,
+                      token: res.data.login.token,
+                      userId: res.data.login.userId,
+                      tokenExpiration: res.data.login.tokenExpiration,
+                    });
                   })
                   .catch((error) => {
                     console.log("ERROR", error);

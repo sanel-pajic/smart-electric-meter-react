@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
   Paper,
   Button,
@@ -23,7 +23,8 @@ import * as yup from "yup";
 import { CircularLoading } from "../components/CircularLoading";
 import { READINGS_QUERY } from "../graphql-queries-mutations/queries";
 import { ADD_METER_READING } from "../graphql-queries-mutations/mutations";
-import { CurrentUserContext } from "../App";
+import { Redirect } from "react-router-dom";
+import { useProtectedPath } from "../components/useProtectedPath";
 
 let schema = yup.object().shape({
   readingMeterValue: yup.number().required().min(5),
@@ -144,7 +145,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const Home: React.FC = () => {
+export const HomePage: React.FC = () => {
   const classes = useStyles();
   const [readingMeterValue, setReadingMeterValue] = useState<number | string>(
     ""
@@ -153,8 +154,11 @@ export const Home: React.FC = () => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const currentUser: string | null = localStorage.getItem("userId");
+  const accessGrant = useProtectedPath();
 
-  const { first_name, last_name } = useContext(CurrentUserContext);
+  // const { first_name, last_name, authorized, userId, token } = useContext(
+  //   CurrentUserContext
+  // );
 
   const { data, loading } = useQuery(READINGS_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -168,23 +172,33 @@ export const Home: React.FC = () => {
     console.log("error", error);
   }
 
+  if (!accessGrant) {
+    return <Redirect to="/authorize" />;
+  }
+
   if (loading || !data) {
     return <CircularLoading />;
   }
 
-  var lastReading = data.meterReadings[data.meterReadings.length - 1];
+  const lastReading = data.meterReadings[data.meterReadings.length - 1];
 
   const readingMeterValueNEW = lastReading.readingMeterValue;
 
   const priceNEW = lastReading.price;
 
-  console.log(
-    "DATA FROM CURRENT USER CONTEXT",
-    " First Name:",
-    first_name,
-    " Last Name:",
-    last_name
-  );
+  // console.log(
+  //   "DATA FROM CURRENT USER CONTEXT",
+  //   " First Name:",
+  //   first_name,
+  //   " Last Name:",
+  //   last_name,
+  //   "Authorized:",
+  //   authorized,
+  //   "User ID:",
+  //   userId,
+  //   "Token:",
+  //   token
+  // );
 
   console.log("CURRENT USER", currentUser);
 
@@ -279,7 +293,6 @@ export const Home: React.FC = () => {
                                 networkFee: consumptionNew,
                                 price: priceNEW,
                                 totalPrice: totalPriceNEW,
-                                author: "5e4982f7ddb59a59a81dd820",
                               },
                             },
                             refetchQueries: [{ query: READINGS_QUERY }],

@@ -19,6 +19,7 @@ import { ErrorLoading } from "./ErrorLoading";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { READINGS_QUERY } from "../graphql-queries-mutations/queries";
 import { REMOVE_METER_READING } from "../graphql-queries-mutations/mutations";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
 const useStyles = makeStyles({
   table: {
@@ -102,6 +103,22 @@ export const TableMeterData: React.FC = () => {
     return fullDate;
   }
 
+  const lastReading = data.meterReadings[data.meterReadings.length - 1];
+
+  const lastReadingID = lastReading._id;
+
+  console.log("LAST READING", lastReading._id);
+
+  const possibleDeleteEditReading = data.meterReadings.map(
+    (meterReading: any) => {
+      return {
+        possibleDeleteEdit: meterReading._id === lastReadingID,
+      };
+    }
+  );
+
+  console.log("POSSIBLE DELETE EDIT", possibleDeleteEditReading);
+
   return (
     <TableContainer component={Paper}>
       <Table
@@ -153,16 +170,19 @@ export const TableMeterData: React.FC = () => {
         </TableHead>
         <TableBody>
           {data.meterReadings.map(
-            (reading: {
-              _id: string;
-              date: string;
-              initialMeterValue: string;
-              readingMeterValue: string;
-              consumption: number;
-              networkFee: number;
-              price: number;
-              totalPrice: number;
-            }) => (
+            (
+              reading: {
+                _id: string;
+                date: string;
+                initialMeterValue: string;
+                readingMeterValue: string;
+                consumption: number;
+                networkFee: number;
+                price: number;
+                totalPrice: number;
+              },
+              index: any
+            ) => (
               <TableRow key={reading._id}>
                 <TableCell align="center">{handleDate(reading.date)}</TableCell>
                 <TableCell align="center">
@@ -181,16 +201,20 @@ export const TableMeterData: React.FC = () => {
                   {ccyFormat(reading.totalPrice)}
                 </TableCell>
                 <TableCell align="center">
-                  <IconButton
-                    onClick={() =>
-                      removeMeterReading({
-                        variables: { _id: reading._id },
-                        refetchQueries: [{ query: READINGS_QUERY }],
-                      })
-                    }
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  {possibleDeleteEditReading[index].possibleDeleteEdit ? (
+                    <IconButton
+                      onClick={() =>
+                        removeMeterReading({
+                          variables: { _id: reading._id },
+                          refetchQueries: [{ query: READINGS_QUERY }],
+                        })
+                      }
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  ) : (
+                    <HighlightOffIcon />
+                  )}
                 </TableCell>
               </TableRow>
             )
