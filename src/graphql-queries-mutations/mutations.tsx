@@ -26,54 +26,6 @@ export const REMOVE_METER_READING = gql`
   }
 `;
 
-// Mutation for add new blog post
-export const ADD_BLOG_MUTATION = gql`
-  mutation($data: BlogPostInput!) {
-    addBlogPost(data: $data) {
-      _id
-      title
-      description_short
-      description
-      image
-      date
-      author
-      likes {
-        _id
-        blogId
-        userId
-      }
-    }
-  }
-`;
-
-// Mutation for remove blog post
-export const REMOVE_BLOG_MUTATION = gql`
-  mutation($_id: ID!) {
-    removeBlogPost(_id: $_id) {
-      _id
-    }
-  }
-`;
-
-// Mutation for add user
-export const ADD_MUTATION_USER = gql`
-  mutation($data: UserInput!) {
-    addUser(data: $data) {
-      userId
-      token
-      tokenExpiration
-    }
-  }
-`;
-
-// Mutation for remove users
-export const REMOVE_USER_MUTATION = gql`
-  mutation($_id: ID!) {
-    removeUser(_id: $_id) {
-      _id
-    }
-  }
-`;
 // Mutation for login
 export const LOGIN_MUTATION = gql`
   mutation($email: String!, $password: String!) {
@@ -81,6 +33,23 @@ export const LOGIN_MUTATION = gql`
       userId
       token
       tokenExpiration
+    }
+  }
+`;
+
+// Mutation for update meter reading
+export const UPDATE_METER_READING = gql`
+  mutation($data: MeterReadingInput!) {
+    updateMeterReading(data: $data) {
+      _id
+      date
+      initialMeterValue
+      readingMeterValue
+      consumption
+      networkFee
+      price
+      totalPrice
+      author
     }
   }
 `;

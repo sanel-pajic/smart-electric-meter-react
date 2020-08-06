@@ -1,6 +1,12 @@
 import React, { useContext } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Toolbar, Typography, useMediaQuery, Avatar } from "@material-ui/core";
+import {
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  Avatar,
+  Divider,
+} from "@material-ui/core";
 import logo from "../images/icon_logo.png";
 import { NavLink, useHistory } from "react-router-dom";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
@@ -21,6 +27,13 @@ const useStyles = makeStyles((theme) => ({
   image: { width: 150, height: 150 },
   imageMedia: { width: 80, height: 80 },
   container: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  containerMedia: {
+    position: "relative",
+    top: 85,
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
@@ -49,9 +62,10 @@ const useStyles = makeStyles((theme) => ({
     height: 50,
     marginTop: 15,
   },
+  divider: { marginTop: 30 },
 }));
 
-function logout(
+export function logout(
   apolloclient: ApolloClient<any>,
   history: any,
   setAuthorized: Function
@@ -69,9 +83,7 @@ export const Header: React.FC = () => {
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const history = useHistory();
   const apolloclient = useApolloClient();
-  const { setAuthorized, first_name, last_name } = useContext(
-    CurrentUserContext
-  );
+  const { setAuthorized } = useContext(CurrentUserContext);
 
   function handleClick() {
     history.push("/authorize");
@@ -97,14 +109,16 @@ export const Header: React.FC = () => {
           </Typography>
         </Toolbar>
         <div className={classes.container}>
-          <ColorButton
-            className={classes.button}
-            variant="contained"
-            color="primary"
-            onClick={handleClick}
-          >
-            Login
-          </ColorButton>
+          {matches ? (
+            <ColorButton
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              onClick={handleClick}
+            >
+              Login
+            </ColorButton>
+          ) : null}
         </div>
       </React.Fragment>
     );
@@ -114,11 +128,6 @@ export const Header: React.FC = () => {
   const lastName: string = data.currentUser.last_name;
   const letterFN = firstName.charAt(0);
   const letterLN = lastName.charAt(0);
-
-  const firstNameContext: string = first_name;
-  const lastNameContext: string = last_name;
-  const letterFNContext = firstNameContext.charAt(0);
-  const letterLNContext = lastNameContext.charAt(0);
 
   // console.log("FIRST NAME  CURRENT USER", firstName);
   // console.log("LAST NAME  CURRENT USER", lastName);
@@ -140,11 +149,11 @@ export const Header: React.FC = () => {
           Smart Electric Meter
         </Typography>
       </Toolbar>
-      <div className={classes.container}>
+      <div className={matches ? classes.container : classes.containerMedia}>
         <div className={classes.avatarTypographyTogether}>
           <Avatar className={classes.avatar}>
-            {letterFN || letterFNContext}
-            {letterLN || letterLNContext}
+            {letterFN}
+            {letterLN}
           </Avatar>
           <Typography className={classes.typography}>
             {firstName} {lastName}
@@ -162,6 +171,7 @@ export const Header: React.FC = () => {
           Logout
         </ColorButton>
       </div>
+      {!matches ? <Divider className={classes.divider} /> : null}
     </React.Fragment>
   );
 };

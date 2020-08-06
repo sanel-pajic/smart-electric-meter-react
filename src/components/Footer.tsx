@@ -1,8 +1,8 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
-import { Divider } from "@material-ui/core";
+import { Divider, useMediaQuery } from "@material-ui/core";
 
 function Copyright() {
   return (
@@ -33,6 +33,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "2%",
   },
+  footerMedia: {
+    backgroundColor: "#383e42",
+    position: "relative",
+    bottom: 0,
+    height: 100,
+    marginTop: "2vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "1%",
+  },
 }));
 
 export const Footer: React.FC<{
@@ -41,12 +53,14 @@ export const Footer: React.FC<{
 }> = (props) => {
   const classes = useStyles();
   const { description, title } = props;
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
-    <footer className={classes.footer}>
+    <footer className={matches ? classes.footer : classes.footerMedia}>
       <Divider />
       <Typography
-        variant="h6"
+        variant={matches ? "h6" : "subtitle2"}
         align="center"
         gutterBottom
         style={{ color: "white" }}
@@ -54,7 +68,7 @@ export const Footer: React.FC<{
         {title}
       </Typography>
       <Typography
-        variant="subtitle1"
+        variant={matches ? "subtitle1" : "subtitle2"}
         align="center"
         component="p"
         style={{ color: "white" }}

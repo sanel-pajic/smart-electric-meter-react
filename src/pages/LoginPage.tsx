@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
   paperModalMedia: {
     position: "absolute",
     width: 300,
-    height: 340,
+    height: 460,
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],

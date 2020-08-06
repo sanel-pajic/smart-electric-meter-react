@@ -15,7 +15,6 @@ import {
   useTheme,
 } from "@material-ui/core/styles";
 import { TableMeterData } from "../components/TableMeterData";
-import meter from "../images/meter.jpg";
 import { DatePickerComponent } from "../components/DatePickerComponent";
 import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
@@ -23,8 +22,10 @@ import * as yup from "yup";
 import { CircularLoading } from "../components/CircularLoading";
 import { READINGS_QUERY } from "../graphql-queries-mutations/queries";
 import { ADD_METER_READING } from "../graphql-queries-mutations/mutations";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { useProtectedPath } from "../components/useProtectedPath";
+import { LinearMeterProgress } from "../components/LinearMeterProgress";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 let schema = yup.object().shape({
   readingMeterValue: yup.number().required().min(5),
@@ -34,7 +35,7 @@ let schema = yup.object().shape({
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      width: "85vw",
+      width: "90vw",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -99,6 +100,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "2%",
       marginBottom: "1%",
     },
+    textHeaderMedia: { marginTop: 25, marginBottom: 15 },
     rootGrid: {
       flexGrow: 2,
     },
@@ -109,8 +111,6 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "1vh",
     },
     typographyListAll: { marginTop: 50, marginBottom: 10 },
-    image: { width: 350, height: 350 },
-    imageMedia: {},
     divMeter: {
       display: "flex",
       flexDirection: "column",
@@ -127,6 +127,12 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingRight: 70,
       marginTop: 30,
     },
+    meterRootMedia: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+    },
     divValues: {
       display: "flex",
       flexDirection: "column",
@@ -141,7 +147,16 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "relative",
       top: 35,
     },
+    typographyInstructionsMedia: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      top: 15,
+      padding: 15,
+    },
     dividerHome: { width: "100%", marginTop: 20 },
+    typographyListAllMedia: { marginTop: 24, fontSize: 22 },
+    buttonStatistics: { marginBottom: 30 },
   })
 );
 
@@ -154,6 +169,7 @@ export const HomePage: React.FC = () => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const currentUser: string | null = localStorage.getItem("userId");
+  const history = useHistory();
   const accessGrant = useProtectedPath();
 
   // const { first_name, last_name, authorized, userId, token } = useContext(
@@ -202,10 +218,21 @@ export const HomePage: React.FC = () => {
 
   console.log("CURRENT USER", currentUser);
 
+  function scrollToForm(id: string) {
+    document?.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  const handleClick = (id: string) => {
+    setReadingMeterValue("");
+    setTimeout(() => {
+      scrollToForm(id);
+    }, 100);
+  };
+
   return (
     <div className={classes.rootDiv}>
       <Paper className={matches ? classes.paper : classes.paperMedia}>
-        <div className={classes.meterRoot}>
+        <div className={matches ? classes.meterRoot : classes.meterRootMedia}>
           <div className={classes.divMeter}>
             <Typography
               variant="h6"
@@ -214,20 +241,43 @@ export const HomePage: React.FC = () => {
             >
               House Mujo
             </Typography>
-            <img
-              src={meter}
-              alt="Meter"
-              className={matches ? classes.image : classes.imageMedia}
-            />
+            <LinearMeterProgress />
           </div>
           <div className={classes.divValues}>
+            {!matches ? (
+              <div
+                className={
+                  matches
+                    ? classes.typographyInstructions
+                    : classes.typographyInstructionsMedia
+                }
+              >
+                <Typography
+                  color="secondary"
+                  className={classes.textNoteInstructions}
+                >
+                  Instructions:
+                </Typography>
+                <Typography className={classes.textNote}>
+                  1. Pick date
+                </Typography>
+                <Typography className={classes.textNote}>
+                  2. Enter first 5 numbers on your meter! Don't enter last
+                  number on your meter (in red)!
+                </Typography>
+                <Typography color="primary" className={classes.textNote}>
+                  Input example: 75432
+                </Typography>
+              </div>
+            ) : null}
             <Typography
               variant={matches ? "h4" : "h5"}
               color="textSecondary"
-              className={classes.textHeader}
+              className={matches ? classes.textHeader : classes.textHeaderMedia}
             >
               Enter Meter Value
             </Typography>
+
             <Paper className={matches ? classes.mainDiv : classes.mainDivMedia}>
               <div className={classes.rootGrid}>
                 <Grid
@@ -247,7 +297,7 @@ export const HomePage: React.FC = () => {
                       autoComplete="off"
                     >
                       <TextField
-                        id="filled-basic3"
+                        id="reading"
                         label="Meter Value Input"
                         variant="filled"
                         size="small"
@@ -296,9 +346,11 @@ export const HomePage: React.FC = () => {
                               },
                             },
                             refetchQueries: [{ query: READINGS_QUERY }],
-                          }).catch((error) =>
-                            console.log("ERROR ADD ARTICLE", error)
-                          );
+                          })
+                            .then((res) =>
+                              handleClick(res.data.addMeterReading._id)
+                            )
+                            .catch((error) => alert(error));
                         } catch (error) {
                           alert(error);
                         }
@@ -310,34 +362,47 @@ export const HomePage: React.FC = () => {
                 </Grid>
               </div>
             </Paper>
-            <div className={classes.typographyInstructions}>
-              <Typography
-                color="secondary"
-                className={classes.textNoteInstructions}
-              >
-                Instructions:
-              </Typography>
-              <Typography className={classes.textNote}>1. Pick date</Typography>
-              <Typography className={classes.textNote}>
-                2. Enter first 5 numbers on your meter! Don't enter last number
-                on your meter (in red)!
-              </Typography>
-              <Typography color="primary" className={classes.textNote}>
-                Input example: 75432
-              </Typography>
-            </div>
+            {matches ? (
+              <div className={classes.typographyInstructions}>
+                <Typography
+                  color="secondary"
+                  className={classes.textNoteInstructions}
+                >
+                  Instructions:
+                </Typography>
+                <Typography className={classes.textNote}>
+                  1. Pick date
+                </Typography>
+                <Typography className={classes.textNote}>
+                  2. Enter first 5 numbers on your meter! Don't enter last
+                  number on your meter (in red)!
+                </Typography>
+                <Typography color="primary" className={classes.textNote}>
+                  Input example: 75432
+                </Typography>
+              </div>
+            ) : null}
           </div>
         </div>
-
         <Typography
           variant={matches ? "h4" : "h5"}
           color="textSecondary"
-          className={matches ? classes.typographyListAll : undefined}
+          className={
+            matches ? classes.typographyListAll : classes.typographyListAllMedia
+          }
         >
           List of all Meter readings by date
         </Typography>
         <Divider className={classes.dividerHome} />
         <TableMeterData />
+        <Button
+          onClick={() => history.push("/statistics")}
+          size="large"
+          className={classes.buttonStatistics}
+          variant="outlined"
+        >
+          Statistics <ArrowRightIcon />
+        </Button>
       </Paper>
     </div>
   );
