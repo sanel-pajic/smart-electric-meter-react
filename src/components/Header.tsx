@@ -129,12 +129,6 @@ export const Header: React.FC = () => {
   const letterFN = firstName.charAt(0);
   const letterLN = lastName.charAt(0);
 
-  // console.log("FIRST NAME  CURRENT USER", firstName);
-  // console.log("LAST NAME  CURRENT USER", lastName);
-
-  // console.log("FIRST NAME CONTEXT", firstNameContext);
-  // console.log("LAST NAME CONTEXT", lastNameContext);
-
   return (
     <React.Fragment>
       <Toolbar className={classes.toolbar}>

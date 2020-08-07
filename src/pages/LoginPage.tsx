@@ -235,7 +235,6 @@ export const LoginPage: React.FC = () => {
                     });
                   })
                   .catch((error) => {
-                    console.log("ERROR", error);
                     alert(error);
                   })
                   .finally(() => window.location.reload());

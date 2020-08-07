@@ -12,13 +12,10 @@ export const useChart = () => {
   if (loading || !data) {
     return <CircularLoading />;
   }
-  console.log("DATA", data);
 
   const consumptionPerMonth = data.meterReadings.map(
     (reading: any) => reading.consumption
   );
-
-  console.log("DATA CONSUMPTION", consumptionPerMonth);
 
   const dataChart = {
     labels: [

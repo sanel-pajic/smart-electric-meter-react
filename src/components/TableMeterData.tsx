@@ -162,8 +162,6 @@ export const TableMeterData: React.FC = () => {
 
   const lastReadingID = lastReading._id;
 
-  console.log("LAST READING", lastReading._id);
-
   const possibleDeleteEditReading = data.meterReadings.map(
     (meterReading: any) => {
       return {
@@ -189,8 +187,6 @@ export const TableMeterData: React.FC = () => {
     const { value } = e.target;
     setEditedPrice(value);
   };
-
-  console.log("POSSIBLE DELETE EDIT", possibleDeleteEditReading);
 
   return (
     <Paper className={classes.root}>

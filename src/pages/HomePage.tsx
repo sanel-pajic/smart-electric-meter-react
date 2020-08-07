@@ -28,8 +28,13 @@ import { LinearMeterProgress } from "../components/LinearMeterProgress";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 let schema = yup.object().shape({
-  readingMeterValue: yup.number().required().min(5),
-  // .test("Meter Value", "Must be exactly 5 characters", (val) => val.length === 5),
+  readingMeterValue: yup
+    .string()
+    .test(
+      "Meter Value",
+      "Must be exactly 5 characters",
+      (val) => val.length === 5
+    ),
 });
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -168,13 +173,8 @@ export const HomePage: React.FC = () => {
   const [date, setDate] = useState<Date | null>(new Date());
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  const currentUser: string | null = localStorage.getItem("userId");
   const history = useHistory();
   const accessGrant = useProtectedPath();
-
-  // const { first_name, last_name, authorized, userId, token } = useContext(
-  //   CurrentUserContext
-  // );
 
   const { data, loading } = useQuery(READINGS_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -201,22 +201,6 @@ export const HomePage: React.FC = () => {
   const readingMeterValueNEW = lastReading.readingMeterValue;
 
   const priceNEW = lastReading.price;
-
-  // console.log(
-  //   "DATA FROM CURRENT USER CONTEXT",
-  //   " First Name:",
-  //   first_name,
-  //   " Last Name:",
-  //   last_name,
-  //   "Authorized:",
-  //   authorized,
-  //   "User ID:",
-  //   userId,
-  //   "Token:",
-  //   token
-  // );
-
-  console.log("CURRENT USER", currentUser);
 
   function scrollToForm(id: string) {
     document?.getElementById(id)?.scrollIntoView({ behavior: "smooth" });

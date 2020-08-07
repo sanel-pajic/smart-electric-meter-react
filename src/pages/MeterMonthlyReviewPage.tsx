@@ -40,7 +40,12 @@ const useStyles = makeStyles(() => ({
     top: 30,
   },
   cardHeader: { padding: 16 },
-  cardHeaderMedia: { padding: 10, marginLeft: "7%" },
+
+  typographyDiv: {
+    display: "flex",
+    justifyContent: "center",
+    aligItems: "center",
+  },
 }));
 
 export const MeterMonthlyReviewPage = (props: {
@@ -66,12 +71,15 @@ export const MeterMonthlyReviewPage = (props: {
   return (
     <div className={matches ? classes.mainDiv : classes.mainDivMedia}>
       <Card {...rest} className={clsx(classes.root, className)} component="div">
-        <Typography
-          className={matches ? classes.cardHeader : classes.cardHeaderMedia}
-          variant={matches ? "h5" : "h6"}
-        >
-          Consumption Per Month
-        </Typography>
+        <div className={matches ? undefined : classes.typographyDiv}>
+          <Typography
+            className={classes.cardHeader}
+            variant={matches ? "h5" : "h6"}
+          >
+            Consumption Per Month
+          </Typography>
+        </div>
+
         <Divider />
         <CardContent>
           <div className={classes.chartContainer}>
