@@ -26,6 +26,54 @@ import { Redirect, useHistory } from "react-router-dom";
 import { useProtectedPath } from "../components/useProtectedPath";
 import { LinearMeterProgress } from "../components/LinearMeterProgress";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const priceElectricity = process.env.REACT_APP_PRICE_ELECTRICITY;
+
+const measuringPointElectricityPrice =
+  process.env.REACT_APP_MEASURING_POINT_ELECTRICITY;
+
+const priceNetworkFee = process.env.REACT_APP_PRICE_NETWORK_FEE;
+
+const measuringPointNetworkFee =
+  process.env.REACT_APP_MEASURING_POINT_NETWORK_FEE;
+
+const renewableSourcesFeePrice =
+  process.env.REACT_APP_RENEWABLE_SOURCES_FEE_PRICE;
+
+const televisionFee = process.env.REACT_APP_TELEVISION_FEE;
+
+console.log(
+  "MEASURING POINT ELECTRICITY ENV",
+  measuringPointElectricityPrice,
+  "MEASURING POINT NETWORK FEE ENV",
+  measuringPointNetworkFee,
+  "RENEWABLE SOURCES FEE PRICE",
+  renewableSourcesFeePrice,
+  "TELEVISION FEE",
+  televisionFee,
+  "PRICE ELECTRICITY",
+  priceElectricity,
+  "PRICE NETWORK FEE",
+  priceNetworkFee
+);
+
+const measuringPointElectricityNEW =
+  //@ts-ignore
+  measuringPointElectricityPrice / 3;
+console.log("MEASURING POINT NEW", measuringPointElectricityNEW);
+
+const measuringPointNetworkFeeNEW =
+  //@ts-ignore
+  measuringPointNetworkFee / 3;
+console.log("MEASURING POINT NEW", measuringPointNetworkFeeNEW);
+
+const televisionFeeNEW =
+  //@ts-ignore
+  televisionFee / 3;
+console.log("TELEVISION FEE NEW", televisionFeeNEW);
 
 let schema = yup.object().shape({
   readingMeterValue: yup
@@ -200,8 +248,6 @@ export const HomePage: React.FC = () => {
 
   const readingMeterValueNEW = lastReading.readingMeterValue;
 
-  const priceNEW = lastReading.price;
-
   function scrollToForm(id: string) {
     document?.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }
@@ -223,7 +269,7 @@ export const HomePage: React.FC = () => {
               color="textSecondary"
               className={classes.typographyHouse}
             >
-              House Mujo
+              House Sanel
             </Typography>
             <LinearMeterProgress />
           </div>
@@ -314,7 +360,41 @@ export const HomePage: React.FC = () => {
                           const consumptionNew =
                             //@ts-ignore
                             readingMeterValue - readingMeterValueNEW;
-                          const totalPriceNEW = consumptionNew * priceNEW * 2;
+
+                          const measuringPointElectricityNEW =
+                            //@ts-ignore
+                            measuringPointElectricityPrice / 3;
+
+                          const measuringPointNetworkFeeNEW =
+                            //@ts-ignore
+                            measuringPointNetworkFee / 3;
+
+                          const televisionFeeNEW =
+                            //@ts-ignore
+                            televisionFee / 3;
+
+                          const totalPriceElectricity =
+                            //@ts-ignore
+                            consumptionNew * priceElectricity;
+
+                          const totalPriceNetworkFee =
+                            //@ts-ignore
+                            consumptionNew * priceNetworkFee;
+
+                          const totalRenewableSourcesFee =
+                            //@ts-ignore
+                            consumptionNew * renewableSourcesFeePrice;
+
+                          const totalPriceWithVAT =
+                            (totalPriceElectricity +
+                              measuringPointElectricityNEW +
+                              totalPriceNetworkFee +
+                              measuringPointNetworkFeeNEW +
+                              totalRenewableSourcesFee) *
+                            1.17;
+
+                          const totalPriceNEW =
+                            totalPriceWithVAT + televisionFeeNEW;
 
                           addMeterReading({
                             variables: {
@@ -323,9 +403,14 @@ export const HomePage: React.FC = () => {
                                 date,
                                 initialMeterValue: readingMeterValueNEW,
                                 readingMeterValue,
-                                consumption: consumptionNew,
-                                networkFee: consumptionNew,
-                                price: priceNEW,
+                                consumptionElectricity: consumptionNew,
+                                priceElectricity: priceElectricity,
+                                measuringPointElectricity: measuringPointElectricityNEW,
+                                networkFeeConsumption: consumptionNew,
+                                measuringPointNetworkFee: measuringPointNetworkFeeNEW,
+                                priceNetworkFee: priceNetworkFee,
+                                renewableSourcesFeePrice: renewableSourcesFeePrice,
+                                televisionFee: televisionFeeNEW,
                                 totalPrice: totalPriceNEW,
                               },
                             },

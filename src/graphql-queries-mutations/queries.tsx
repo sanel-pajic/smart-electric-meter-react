@@ -9,23 +9,16 @@ export const READINGS_QUERY = gql`
       date
       initialMeterValue
       readingMeterValue
-      consumption
-      networkFee
-      price
+      consumptionElectricity
+      priceElectricity
+      measuringPointElectricity
+      networkFeeConsumption
+      priceNetworkFee
+      measuringPointNetworkFee
+      renewableSourcesFeePrice
+      televisionFee
       totalPrice
-    }
-  }
-`;
-
-// Query for displaying all articles component
-export const ARTICLES_QUERY = gql`
-  query {
-    componentArticles {
-      _id
-      code
-      description
-      quantity
-      price
+      author
     }
   }
 `;

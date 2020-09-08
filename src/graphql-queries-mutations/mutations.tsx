@@ -8,9 +8,14 @@ export const ADD_METER_READING = gql`
       date
       initialMeterValue
       readingMeterValue
-      consumption
-      networkFee
-      price
+      consumptionElectricity
+      priceElectricity
+      measuringPointElectricity
+      networkFeeConsumption
+      priceNetworkFee
+      measuringPointNetworkFee
+      renewableSourcesFeePrice
+      televisionFee
       totalPrice
       author
     }

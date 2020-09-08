@@ -233,7 +233,7 @@ export const TableMeterData: React.FC = () => {
               </StyledTableCell>
               <StyledTableCell align="center">
                 <Typography className={classes.tableColumn}>
-                  Total (A+B) BAM
+                  Total (A+B) BAM incl.VAT 17%
                 </Typography>
               </StyledTableCell>
               <StyledTableCell align="center">
