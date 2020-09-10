@@ -9,6 +9,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { AuthorizePage } from "./pages/AuthorizePage";
 import { MeterMonthlyReviewPage } from "./pages/MeterMonthlyReviewPage";
+import { Settings } from "./components/Settings";
 
 export const client = new ApolloClient({
   uri: "http://localhost:8000/graphql",
@@ -85,6 +86,7 @@ const App: React.FC = () => {
                 path="/statistics"
                 component={MeterMonthlyReviewPage}
               />
+              <Route exact path="/settings" component={Settings} />
               <Route render={() => <Error />} />
             </Switch>
             <Footer

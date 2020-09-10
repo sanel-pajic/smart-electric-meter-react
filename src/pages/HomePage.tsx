@@ -27,6 +27,7 @@ import { useProtectedPath } from "../components/useProtectedPath";
 import { LinearMeterProgress } from "../components/LinearMeterProgress";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import dotenv from "dotenv";
+import { Settings } from "../components/Settings";
 
 dotenv.config();
 
@@ -96,6 +97,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: "auto",
       marginRight: "auto",
       marginTop: 10,
+      boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
     },
     paperMedia: {
       width: "380px",
@@ -175,7 +177,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      border: "1px solid #bdbdbd",
+      flexDirection: "column",
       padding: 10,
       paddingRight: 70,
       marginTop: 30,
@@ -185,6 +187,14 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
+    },
+    meterSettingsDiv: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+
+      padding: 40,
+      marginTop: 30,
     },
     divValues: {
       display: "flex",
@@ -210,6 +220,7 @@ const useStyles = makeStyles((theme: Theme) =>
     dividerHome: { width: "100%", marginTop: 20 },
     typographyListAllMedia: { marginTop: 24, fontSize: 22 },
     buttonStatistics: { marginBottom: 30 },
+    settings: { padding: 10, marginLeft: 20 },
   })
 );
 
@@ -262,195 +273,192 @@ export const HomePage: React.FC = () => {
   return (
     <div className={classes.rootDiv}>
       <Paper className={matches ? classes.paper : classes.paperMedia}>
-        <div className={matches ? classes.meterRoot : classes.meterRootMedia}>
-          <div className={classes.divMeter}>
-            <Typography
-              variant="h6"
-              color="textSecondary"
-              className={classes.typographyHouse}
-            >
-              House Sanel
-            </Typography>
-            <LinearMeterProgress />
-          </div>
-          <div className={classes.divValues}>
-            {!matches ? (
-              <div
+        <div className={classes.meterSettingsDiv}>
+          <div className={matches ? classes.meterRoot : classes.meterRootMedia}>
+            <div className={classes.divMeter}>
+              <LinearMeterProgress />
+            </div>
+
+            <div className={classes.divValues}>
+              {!matches ? (
+                <div
+                  className={
+                    matches
+                      ? classes.typographyInstructions
+                      : classes.typographyInstructionsMedia
+                  }
+                >
+                  <Typography
+                    color="secondary"
+                    className={classes.textNoteInstructions}
+                  >
+                    Instructions:
+                  </Typography>
+                  <Typography className={classes.textNote}>
+                    1. Pick date
+                  </Typography>
+                  <Typography className={classes.textNote}>
+                    2. Enter first 5 numbers on your meter! Don't enter last
+                    number on your meter (in red)!
+                  </Typography>
+                  <Typography color="primary" className={classes.textNote}>
+                    Input example: 75432
+                  </Typography>
+                </div>
+              ) : null}
+              <Typography
+                variant={matches ? "h4" : "h5"}
+                color="textSecondary"
                 className={
-                  matches
-                    ? classes.typographyInstructions
-                    : classes.typographyInstructionsMedia
+                  matches ? classes.textHeader : classes.textHeaderMedia
                 }
               >
-                <Typography
-                  color="secondary"
-                  className={classes.textNoteInstructions}
-                >
-                  Instructions:
-                </Typography>
-                <Typography className={classes.textNote}>
-                  1. Pick date
-                </Typography>
-                <Typography className={classes.textNote}>
-                  2. Enter first 5 numbers on your meter! Don't enter last
-                  number on your meter (in red)!
-                </Typography>
-                <Typography color="primary" className={classes.textNote}>
-                  Input example: 75432
-                </Typography>
-              </div>
-            ) : null}
-            <Typography
-              variant={matches ? "h4" : "h5"}
-              color="textSecondary"
-              className={matches ? classes.textHeader : classes.textHeaderMedia}
-            >
-              Enter Meter Value
-            </Typography>
+                Enter Meter Value
+              </Typography>
 
-            <Paper className={matches ? classes.mainDiv : classes.mainDivMedia}>
-              <div className={classes.rootGrid}>
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  alignItems="center"
-                >
-                  <Grid item xs="auto">
-                    <DatePickerComponent date={date} onDateChange={setDate} />
-                  </Grid>
+              <Paper
+                className={matches ? classes.mainDiv : classes.mainDivMedia}
+              >
+                <div className={classes.rootGrid}>
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-around"
+                    alignItems="center"
+                  >
+                    <Grid item xs="auto">
+                      <DatePickerComponent date={date} onDateChange={setDate} />
+                    </Grid>
 
-                  <Grid item xs="auto">
-                    <form
-                      className={classes.root}
-                      noValidate
-                      autoComplete="off"
-                    >
-                      <TextField
-                        id="reading"
-                        label="Meter Value Input"
-                        variant="filled"
-                        size="small"
-                        type="number"
-                        className={
-                          matches ? classes.quantity : classes.quantityMedia
-                        }
+                    <Grid item xs="auto">
+                      <form
+                        className={classes.root}
+                        noValidate
+                        autoComplete="off"
+                      >
+                        <TextField
+                          id="reading"
+                          label="Meter Value Input"
+                          variant="filled"
+                          size="small"
+                          type="number"
+                          className={
+                            matches ? classes.quantity : classes.quantityMedia
+                          }
+                          color="secondary"
+                          value={readingMeterValue}
+                          onChange={(e) => setReadingMeterValue(e.target.value)}
+                        />
+                      </form>
+                    </Grid>
+
+                    <Grid item xs="auto">
+                      <Button
+                        variant="contained"
                         color="secondary"
-                        value={readingMeterValue}
-                        onChange={(e) => setReadingMeterValue(e.target.value)}
-                      />
-                    </form>
-                  </Grid>
-
-                  <Grid item xs="auto">
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      className={
-                        matches ? classes.addButton : classes.addButtonMedia
-                      }
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setReadingMeterValue("");
-                        try {
-                          const valid = schema.validateSync({
-                            readingMeterValue,
-                          });
-                          console.log("VALID", valid);
-                          const consumptionNew =
-                            //@ts-ignore
-                            readingMeterValue - readingMeterValueNEW;
-
-                          const measuringPointElectricityNEW =
-                            //@ts-ignore
-                            measuringPointElectricityPrice / 3;
-
-                          const measuringPointNetworkFeeNEW =
-                            //@ts-ignore
-                            measuringPointNetworkFee / 3;
-
-                          const televisionFeeNEW =
-                            //@ts-ignore
-                            televisionFee / 3;
-
-                          const totalPriceElectricity =
-                            //@ts-ignore
-                            consumptionNew * priceElectricity;
-
-                          const totalPriceNetworkFee =
-                            //@ts-ignore
-                            consumptionNew * priceNetworkFee;
-
-                          const totalRenewableSourcesFee =
-                            //@ts-ignore
-                            consumptionNew * renewableSourcesFeePrice;
-
-                          const totalPriceWithVAT =
-                            (totalPriceElectricity +
-                              measuringPointElectricityNEW +
-                              totalPriceNetworkFee +
-                              measuringPointNetworkFeeNEW +
-                              totalRenewableSourcesFee) *
-                            1.17;
-
-                          const totalPriceNEW =
-                            totalPriceWithVAT + televisionFeeNEW;
-
-                          addMeterReading({
-                            variables: {
-                              data: {
-                                _id: mongoID.generate(),
-                                date,
-                                initialMeterValue: readingMeterValueNEW,
-                                readingMeterValue,
-                                consumptionElectricity: consumptionNew,
-                                priceElectricity: priceElectricity,
-                                measuringPointElectricity: measuringPointElectricityNEW,
-                                networkFeeConsumption: consumptionNew,
-                                measuringPointNetworkFee: measuringPointNetworkFeeNEW,
-                                priceNetworkFee: priceNetworkFee,
-                                renewableSourcesFeePrice: renewableSourcesFeePrice,
-                                televisionFee: televisionFeeNEW,
-                                totalPrice: totalPriceNEW,
-                              },
-                            },
-                            refetchQueries: [{ query: READINGS_QUERY }],
-                          })
-                            .then((res) =>
-                              handleClick(res.data.addMeterReading._id)
-                            )
-                            .catch((error) => alert(error));
-                        } catch (error) {
-                          alert(error);
+                        className={
+                          matches ? classes.addButton : classes.addButtonMedia
                         }
-                      }}
-                    >
-                      Add Reading
-                    </Button>
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setReadingMeterValue("");
+                          try {
+                            const valid = schema.validateSync({
+                              readingMeterValue,
+                            });
+                            console.log("VALID", valid);
+                            const consumptionNew =
+                              //@ts-ignore
+                              readingMeterValue - readingMeterValueNEW;
+
+                            const measuringPointElectricityNEW =
+                              //@ts-ignore
+                              measuringPointElectricityPrice / 3;
+
+                            const measuringPointNetworkFeeNEW =
+                              //@ts-ignore
+                              measuringPointNetworkFee / 3;
+
+                            const televisionFeeNEW =
+                              //@ts-ignore
+                              televisionFee / 3;
+
+                            const totalPriceElectricity =
+                              //@ts-ignore
+                              consumptionNew * priceElectricity;
+
+                            const totalPriceNetworkFee =
+                              //@ts-ignore
+                              consumptionNew * priceNetworkFee;
+
+                            const totalRenewableSourcesFee =
+                              //@ts-ignore
+                              consumptionNew * renewableSourcesFeePrice;
+
+                            const totalPriceWithVAT =
+                              (totalPriceElectricity +
+                                measuringPointElectricityNEW +
+                                totalPriceNetworkFee +
+                                measuringPointNetworkFeeNEW +
+                                totalRenewableSourcesFee) *
+                              1.17;
+
+                            const totalPriceNEW =
+                              totalPriceWithVAT + televisionFeeNEW;
+
+                            addMeterReading({
+                              variables: {
+                                data: {
+                                  _id: mongoID.generate(),
+                                  date,
+                                  initialMeterValue: readingMeterValueNEW,
+                                  readingMeterValue,
+                                  consumptionElectricity: consumptionNew,
+                                  networkFeeConsumption: consumptionNew,
+                                  totalPrice: totalPriceNEW,
+                                },
+                              },
+                              refetchQueries: [{ query: READINGS_QUERY }],
+                            })
+                              .then((res) =>
+                                handleClick(res.data.addMeterReading._id)
+                              )
+                              .catch((error) => alert(error));
+                          } catch (error) {
+                            alert(error);
+                          }
+                        }}
+                      >
+                        Add Reading
+                      </Button>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </div>
-            </Paper>
-            {matches ? (
-              <div className={classes.typographyInstructions}>
-                <Typography
-                  color="secondary"
-                  className={classes.textNoteInstructions}
-                >
-                  Instructions:
-                </Typography>
-                <Typography className={classes.textNote}>
-                  1. Pick date
-                </Typography>
-                <Typography className={classes.textNote}>
-                  2. Enter first 5 numbers on your meter! Don't enter last
-                  number on your meter (in red)!
-                </Typography>
-                <Typography color="primary" className={classes.textNote}>
-                  Input example: 75432
-                </Typography>
-              </div>
-            ) : null}
+                </div>
+              </Paper>
+              {matches ? (
+                <div className={classes.typographyInstructions}>
+                  <Typography
+                    color="secondary"
+                    className={classes.textNoteInstructions}
+                  >
+                    Instructions:
+                  </Typography>
+                  <Typography className={classes.textNote}>
+                    1. Pick date
+                  </Typography>
+                  <Typography className={classes.textNote}>
+                    2. Enter first 5 numbers on your meter! Don't enter last
+                    number on your meter (in red)!
+                  </Typography>
+                  <Typography color="primary" className={classes.textNote}>
+                    Input example: 75432
+                  </Typography>
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <div className={classes.settings}>
+            <Settings />
           </div>
         </div>
         <Typography

@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-// Query for displaying all blog posts
+// Query for displaying all meter readings
 
 export const READINGS_QUERY = gql`
   query {
@@ -10,15 +10,25 @@ export const READINGS_QUERY = gql`
       initialMeterValue
       readingMeterValue
       consumptionElectricity
+      networkFeeConsumption
+      totalPrice
+      author
+    }
+  }
+`;
+
+// Query for displaying all meter settings
+
+export const SETTINGS_QUERY = gql`
+  query {
+    meterSettings {
+      _id
       priceElectricity
       measuringPointElectricity
-      networkFeeConsumption
       priceNetworkFee
       measuringPointNetworkFee
       renewableSourcesFeePrice
       televisionFee
-      totalPrice
-      author
     }
   }
 `;

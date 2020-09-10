@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-// Mutation for add new article
+// Mutation for add new meter reading
 export const ADD_METER_READING = gql`
   mutation($data: MeterReadingInput!) {
     addMeterReading(data: $data) {
@@ -9,20 +9,14 @@ export const ADD_METER_READING = gql`
       initialMeterValue
       readingMeterValue
       consumptionElectricity
-      priceElectricity
-      measuringPointElectricity
       networkFeeConsumption
-      priceNetworkFee
-      measuringPointNetworkFee
-      renewableSourcesFeePrice
-      televisionFee
       totalPrice
       author
     }
   }
 `;
 
-// Mutation for remove article
+// Mutation for remove meter reading
 export const REMOVE_METER_READING = gql`
   mutation($_id: ID!) {
     removeMeterReading(_id: $_id) {
@@ -50,9 +44,8 @@ export const UPDATE_METER_READING = gql`
       date
       initialMeterValue
       readingMeterValue
-      consumption
-      networkFee
-      price
+      consumptionElectricity
+      networkFeeConsumption
       totalPrice
       author
     }
