@@ -20,7 +20,10 @@ import mongoID from "bson-objectid";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import * as yup from "yup";
 import { CircularLoading } from "../components/CircularLoading";
-import { READINGS_QUERY } from "../graphql-queries-mutations/queries";
+import {
+  READINGS_QUERY,
+  SETTINGS_QUERY,
+} from "../graphql-queries-mutations/queries";
 import { ADD_METER_READING } from "../graphql-queries-mutations/mutations";
 import { Redirect, useHistory } from "react-router-dom";
 import { useProtectedPath } from "../components/useProtectedPath";
@@ -31,50 +34,35 @@ import { Settings } from "../components/Settings";
 
 dotenv.config();
 
-const priceElectricity = process.env.REACT_APP_PRICE_ELECTRICITY;
+// const priceElectricity = process.env.REACT_APP_PRICE_ELECTRICITY;
 
-const measuringPointElectricityPrice =
-  process.env.REACT_APP_MEASURING_POINT_ELECTRICITY;
+// const measuringPointElectricityPrice =
+//   process.env.REACT_APP_MEASURING_POINT_ELECTRICITY;
 
-const priceNetworkFee = process.env.REACT_APP_PRICE_NETWORK_FEE;
+// const priceNetworkFee = process.env.REACT_APP_PRICE_NETWORK_FEE;
 
-const measuringPointNetworkFee =
-  process.env.REACT_APP_MEASURING_POINT_NETWORK_FEE;
+// const measuringPointNetworkFee =
+//   process.env.REACT_APP_MEASURING_POINT_NETWORK_FEE;
 
-const renewableSourcesFeePrice =
-  process.env.REACT_APP_RENEWABLE_SOURCES_FEE_PRICE;
+// const renewableSourcesFeePrice =
+//   process.env.REACT_APP_RENEWABLE_SOURCES_FEE_PRICE;
 
-const televisionFee = process.env.REACT_APP_TELEVISION_FEE;
+// const televisionFee = process.env.REACT_APP_TELEVISION_FEE;
 
-console.log(
-  "MEASURING POINT ELECTRICITY ENV",
-  measuringPointElectricityPrice,
-  "MEASURING POINT NETWORK FEE ENV",
-  measuringPointNetworkFee,
-  "RENEWABLE SOURCES FEE PRICE",
-  renewableSourcesFeePrice,
-  "TELEVISION FEE",
-  televisionFee,
-  "PRICE ELECTRICITY",
-  priceElectricity,
-  "PRICE NETWORK FEE",
-  priceNetworkFee
-);
-
-const measuringPointElectricityNEW =
-  //@ts-ignore
-  measuringPointElectricityPrice / 3;
-console.log("MEASURING POINT NEW", measuringPointElectricityNEW);
-
-const measuringPointNetworkFeeNEW =
-  //@ts-ignore
-  measuringPointNetworkFee / 3;
-console.log("MEASURING POINT NEW", measuringPointNetworkFeeNEW);
-
-const televisionFeeNEW =
-  //@ts-ignore
-  televisionFee / 3;
-console.log("TELEVISION FEE NEW", televisionFeeNEW);
+// console.log(
+//   "MEASURING POINT ELECTRICITY ENV",
+//   measuringPointElectricityPrice,
+//   "MEASURING POINT NETWORK FEE ENV",
+//   measuringPointNetworkFee,
+//   "RENEWABLE SOURCES FEE PRICE",
+//   renewableSourcesFeePrice,
+//   "TELEVISION FEE",
+//   televisionFee,
+//   "PRICE ELECTRICITY",
+//   priceElectricity,
+//   "PRICE NETWORK FEE",
+//   priceNetworkFee
+// );
 
 let schema = yup.object().shape({
   readingMeterValue: yup
@@ -96,7 +84,6 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       marginLeft: "auto",
       marginRight: "auto",
-      marginTop: 10,
       boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
     },
     paperMedia: {
@@ -109,15 +96,13 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: "auto",
     },
     mainDiv: {
-      width: "43vw",
+      width: "45vw",
       display: "flex",
       justifyContent: "space-around",
       alignItems: "center",
-      marginTop: "1%",
+      marginTop: "2%",
       boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
-      position: "relative",
-      padding: "1%",
-      marginBottom: "4%",
+      marginBottom: "1%",
     },
     mainDivMedia: {
       width: "340px",
@@ -143,8 +128,8 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 300,
     },
     addButton: {
-      width: 170,
-      marginLeft: "5%",
+      width: 150,
+      marginLeft: "2%",
     },
     addButtonMedia: {
       width: 170,
@@ -178,9 +163,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
-      padding: 10,
-      paddingRight: 70,
-      marginTop: 30,
+      paddingRight: "6%",
     },
     meterRootMedia: {
       display: "flex",
@@ -192,9 +175,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-
-      padding: 40,
-      marginTop: 30,
+      marginTop: 50,
     },
     divValues: {
       display: "flex",
@@ -220,7 +201,7 @@ const useStyles = makeStyles((theme: Theme) =>
     dividerHome: { width: "100%", marginTop: 20 },
     typographyListAllMedia: { marginTop: 24, fontSize: 22 },
     buttonStatistics: { marginBottom: 30 },
-    settings: { padding: 10, marginLeft: 20 },
+    settings: { marginLeft: "4%" },
   })
 );
 
@@ -235,13 +216,29 @@ export const HomePage: React.FC = () => {
   const history = useHistory();
   const accessGrant = useProtectedPath();
 
-  const { data, loading } = useQuery(READINGS_QUERY, {
-    fetchPolicy: "cache-and-network",
-  });
+  const { data: MeterReadingsData, loading: MeterReadingsLoading } = useQuery(
+    READINGS_QUERY,
+    {
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
+  const { data: SettingsData, loading: SettingsDataLoading } = useQuery(
+    SETTINGS_QUERY,
+    {
+      fetchPolicy: "cache-and-network",
+    }
+  );
   const [addMeterReading, { error }] = useMutation(ADD_METER_READING, {
     errorPolicy: "all",
   });
+
+  if (MeterReadingsLoading || !MeterReadingsData) {
+    return <CircularLoading />;
+  }
+  if (SettingsDataLoading || !SettingsData) {
+    return <CircularLoading />;
+  }
 
   if (error) {
     console.log("error", error);
@@ -251,13 +248,28 @@ export const HomePage: React.FC = () => {
     return <Redirect to="/authorize" />;
   }
 
-  if (loading || !data) {
-    return <CircularLoading />;
-  }
-
-  const lastReading = data.meterReadings[data.meterReadings.length - 1];
+  const lastReading =
+    MeterReadingsData.meterReadings[MeterReadingsData.meterReadings.length - 1];
 
   const readingMeterValueNEW = lastReading.readingMeterValue;
+
+  const priceElectricityNEW = SettingsData.meterSettings[0].priceElectricity;
+
+  // Measuring Location Electricity is divided by 3 since three households are involved
+  const measuringPointElectricityPriceNEW =
+    SettingsData.meterSettings[0].measuringPointElectricity / 3;
+
+  const priceNetworkFeeNEW = SettingsData.meterSettings[0].priceNetworkFee;
+
+  // Measuring Location Network Fee is divided by 3 since three households are involved
+  const measuringPointElectricityNetworkFeeNEW =
+    SettingsData.meterSettings[0].measuringPointNetworkFee / 3;
+
+  const renewableSourcesFeePriceNEW =
+    SettingsData.meterSettings[0].renewableSourcesFeePrice;
+
+  // Television Fee is divided by 3 since three households are involved
+  const televisionFeePriceNEW = SettingsData.meterSettings[0].televisionFee / 3;
 
   function scrollToForm(id: string) {
     document?.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -371,40 +383,31 @@ export const HomePage: React.FC = () => {
                               //@ts-ignore
                               readingMeterValue - readingMeterValueNEW;
 
-                            const measuringPointElectricityNEW =
-                              //@ts-ignore
-                              measuringPointElectricityPrice / 3;
-
-                            const measuringPointNetworkFeeNEW =
-                              //@ts-ignore
-                              measuringPointNetworkFee / 3;
-
-                            const televisionFeeNEW =
-                              //@ts-ignore
-                              televisionFee / 3;
-
                             const totalPriceElectricity =
                               //@ts-ignore
-                              consumptionNew * priceElectricity;
+                              consumptionNew * priceElectricityNEW;
 
                             const totalPriceNetworkFee =
                               //@ts-ignore
-                              consumptionNew * priceNetworkFee;
+                              consumptionNew * priceNetworkFeeNEW;
 
                             const totalRenewableSourcesFee =
                               //@ts-ignore
-                              consumptionNew * renewableSourcesFeePrice;
+                              consumptionNew * renewableSourcesFeePriceNEW;
 
                             const totalPriceWithVAT =
+                              //@ts-ignore
                               (totalPriceElectricity +
-                                measuringPointElectricityNEW +
+                                measuringPointElectricityPriceNEW +
                                 totalPriceNetworkFee +
-                                measuringPointNetworkFeeNEW +
+                                measuringPointElectricityNetworkFeeNEW +
                                 totalRenewableSourcesFee) *
                               1.17;
 
-                            const totalPriceNEW =
-                              totalPriceWithVAT + televisionFeeNEW;
+                            const totalPriceNEW: number =
+                              totalPriceWithVAT + televisionFeePriceNEW;
+
+                            console.log("TOTAL PRICE", totalPriceNEW);
 
                             addMeterReading({
                               variables: {
@@ -458,7 +461,7 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
           <div className={classes.settings}>
-            <Settings />
+            <Settings data={SettingsData} />
           </div>
         </div>
         <Typography
@@ -471,7 +474,7 @@ export const HomePage: React.FC = () => {
           List of all Meter readings by date
         </Typography>
         <Divider className={classes.dividerHome} />
-        <TableMeterData />
+        <TableMeterData data={MeterReadingsData} />
         <Button
           onClick={() => history.push("/statistics")}
           size="large"

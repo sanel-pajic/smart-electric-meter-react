@@ -1,5 +1,12 @@
-import React from "react";
-import { Paper, makeStyles, Divider, Typography } from "@material-ui/core";
+import React, { ChangeEvent, useState } from "react";
+import {
+  Paper,
+  makeStyles,
+  Divider,
+  Typography,
+  IconButton,
+  TextField,
+} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ElectricityIcon from "@material-ui/icons/EmojiObjectsOutlined";
 import {
@@ -15,11 +22,23 @@ import electricGridImage from "../images/electricGrid.png";
 import electricIconImage from "../images/electricIcon.png";
 import TelevisionFee from "@material-ui/icons/Tv";
 import WindMill from "@material-ui/icons/Toys";
+import EditIcon from "@material-ui/icons/Edit";
+import CheckIcon from "@material-ui/icons/Check";
+import { useMutation } from "@apollo/react-hooks";
+import { UPDATE_METER_SETTINGS } from "../graphql-queries-mutations/mutations";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     width: 400,
-    height: 700,
+    height: 750,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+  },
+  paperEditing: {
+    width: 400,
+    height: 850,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -112,6 +131,7 @@ const useStyles = makeStyles((theme) => ({
   typographyTitle: { position: "relative", right: 45 },
   typographyTitleTwo: { position: "relative", right: 25 },
   typographyPrice: { position: "relative", left: 130, bottom: 25 },
+  typographyPriceTwo: { position: "relative", left: 135, bottom: 25 },
   image: {
     width: 32,
     height: 32,
@@ -144,10 +164,130 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     left: 15,
   },
+  settingsDiv: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  editSettings: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    top: 10,
+    left: 20,
+    marginBottom: 10,
+  },
+  iconButton: { marginLeft: 10 },
+  editingTextField: {
+    position: "relative",
+    left: 130,
+    bottom: 40,
+    width: 110,
+  },
 }));
 
-export const Settings: React.FC = () => {
+export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
+  data,
+}) => {
   const classes = useStyles();
+  const [editing, setEditing] = useState(false);
+
+  const electricityPriceNEW = data.meterSettings[0].priceElectricity;
+
+  const [electricityPrice, setElectricityPrice] = useState(electricityPriceNEW);
+  const measuringLocationElectricityFeeNEW =
+    data.meterSettings[0].measuringPointElectricity;
+  const [
+    measuringLocationElectricityFee,
+    setMeasuringLocationElectricityFee,
+  ] = useState(measuringLocationElectricityFeeNEW);
+  const networkFeePriceNEW = data.meterSettings[0].priceNetworkFee;
+  const [networkFeePrice, setNetworkFeePrice] = useState(networkFeePriceNEW);
+  const measurementLocationNetworkFeeNEW =
+    data.meterSettings[0].measuringPointNetworkFee;
+  const [
+    measurementLocationNetworkFee,
+    setMeasurementLocationNetworkFee,
+  ] = useState(measurementLocationNetworkFeeNEW);
+
+  const renewableSourcesFeePriceNEW =
+    data.meterSettings[0].renewableSourcesFeePrice;
+  const [renewableSourcesFeePrice, setRenewableSourcesFeePrice] = useState(
+    renewableSourcesFeePriceNEW
+  );
+  const televisionFeePriceNEW = data.meterSettings[0].televisionFee;
+  const [televisionFeePrice, setTelevisionFeePrice] = useState(
+    televisionFeePriceNEW
+  );
+
+  const [editedPriceElectricity, setEditedPriceElectricity] = useState("");
+  const [
+    editedMeasuringPointElectricity,
+    setEditedMeasuringPointElectricity,
+  ] = useState("");
+  const [editedPriceNetworkFee, setEditedPriceNetworkFee] = useState("");
+  const [
+    editedMeasuringPointNetworkFee,
+    setEditedMeasuringPointNetworkFee,
+  ] = useState("");
+  const [
+    editedRenewableSourcesFeePrice,
+    setEditedRenewableSourcesFeePrice,
+  ] = useState("");
+  const [editedTelevisionFee, setEditedTelevisionFee] = useState("");
+
+  const [editSettings, { error: errorEditSettings }] = useMutation(
+    UPDATE_METER_SETTINGS
+  );
+
+  if (errorEditSettings) {
+    alert(errorEditSettings);
+  }
+
+  const handleEditingElectricityPrice = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+    setElectricityPrice(value);
+  };
+
+  const handleMeasuringLocationElectricityFee = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+    setMeasuringLocationElectricityFee(value);
+  };
+
+  const handleNetworkFeePrice = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+    setNetworkFeePrice(value);
+  };
+
+  const handleMeasurementLocationNetworkFee = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+    setMeasurementLocationNetworkFee(value);
+  };
+
+  const handleRenewableSourcesFeePrice = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+    setRenewableSourcesFeePrice(value);
+  };
+
+  const handleTelevisionFeePrice = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+    setTelevisionFeePrice(value);
+  };
+
   return (
     <div
       style={{
@@ -156,11 +296,13 @@ export const Settings: React.FC = () => {
         alignItems: "center",
       }}
     >
-      <Paper className={classes.paper}>
-        <SettingsIcon className={classes.settings} color="action" />
-        <Typography variant="h5" color="textSecondary">
-          Meter Settings
-        </Typography>
+      <Paper className={!editing ? classes.paper : classes.paperEditing}>
+        <div className={classes.settingsDiv}>
+          <SettingsIcon className={classes.settings} color="action" />
+          <Typography variant="h5" color="textSecondary">
+            Meter Settings
+          </Typography>
+        </div>
         <Divider className={classes.divider} />
         <div className={classes.divSetting}>
           <ElectricityIcon className={classes.electricityIcon} />
@@ -172,13 +314,26 @@ export const Settings: React.FC = () => {
             Electricity Price
           </Typography>
         </div>
-        <Typography
-          className={classes.typographyPrice}
-          variant="body1"
-          color="textSecondary"
-        >
-          0.006982 BAM
-        </Typography>
+        {editing ? (
+          <TextField
+            value={electricityPrice}
+            onChange={handleEditingElectricityPrice}
+            className={classes.editingTextField}
+            id="outlined-size-small-1"
+            defaultValue="Small"
+            variant="outlined"
+            size="small"
+          />
+        ) : (
+          <Typography
+            className={classes.typographyPrice}
+            variant="body1"
+            color="textSecondary"
+          >
+            {electricityPrice} BAM
+          </Typography>
+        )}
+
         <Divider className={classes.dividerTwo} />
         <div className={classes.divSettingTwo}>
           <div className={classes.imageDivTwo}>
@@ -197,13 +352,26 @@ export const Settings: React.FC = () => {
             </Typography>
           </div>
         </div>
-        <Typography
-          className={classes.typographyPrice}
-          variant="body1"
-          color="textSecondary"
-        >
-          0.006982 BAM
-        </Typography>
+        {editing ? (
+          <TextField
+            value={measuringLocationElectricityFee}
+            onChange={handleMeasuringLocationElectricityFee}
+            className={classes.editingTextField}
+            id="outlined-size-small-2"
+            defaultValue="Small"
+            variant="outlined"
+            size="small"
+          />
+        ) : (
+          <Typography
+            className={classes.typographyPriceTwo}
+            variant="body1"
+            color="textSecondary"
+          >
+            {measuringLocationElectricityFee} BAM
+          </Typography>
+        )}
+
         <Divider className={classes.dividerTwo} />
 
         <div className={classes.divSetting}>
@@ -216,13 +384,26 @@ export const Settings: React.FC = () => {
             Network Fee Price
           </Typography>
         </div>
-        <Typography
-          className={classes.typographyPrice}
-          variant="body1"
-          color="textSecondary"
-        >
-          0.006982 BAM
-        </Typography>
+        {editing ? (
+          <TextField
+            value={networkFeePrice}
+            onChange={handleNetworkFeePrice}
+            className={classes.editingTextField}
+            id="outlined-size-small-3"
+            defaultValue="Small"
+            variant="outlined"
+            size="small"
+          />
+        ) : (
+          <Typography
+            className={classes.typographyPrice}
+            variant="body1"
+            color="textSecondary"
+          >
+            {networkFeePrice} BAM
+          </Typography>
+        )}
+
         <Divider className={classes.dividerTwo} />
         <div className={classes.divSettingTwo}>
           <div className={classes.imageDiv}>
@@ -241,13 +422,26 @@ export const Settings: React.FC = () => {
             </Typography>
           </div>
         </div>
-        <Typography
-          className={classes.typographyPrice}
-          variant="body1"
-          color="textSecondary"
-        >
-          0.006982 BAM
-        </Typography>
+        {editing ? (
+          <TextField
+            value={measurementLocationNetworkFee}
+            onChange={handleMeasurementLocationNetworkFee}
+            className={classes.editingTextField}
+            id="outlined-size-small-4"
+            defaultValue="Small"
+            variant="outlined"
+            size="small"
+          />
+        ) : (
+          <Typography
+            className={classes.typographyPriceTwo}
+            variant="body1"
+            color="textSecondary"
+          >
+            {measurementLocationNetworkFee} BAM
+          </Typography>
+        )}
+
         <Divider className={classes.dividerTwo} />
         <div className={classes.divSettingThree}>
           <WindMill className={classes.windMill} />
@@ -260,13 +454,26 @@ export const Settings: React.FC = () => {
             </Typography>
           </div>
         </div>
-        <Typography
-          className={classes.typographyPrice}
-          variant="body1"
-          color="textSecondary"
-        >
-          0.006982 BAM
-        </Typography>
+        {editing ? (
+          <TextField
+            value={renewableSourcesFeePrice}
+            onChange={handleRenewableSourcesFeePrice}
+            className={classes.editingTextField}
+            id="outlined-size-small-5"
+            defaultValue="Small"
+            variant="outlined"
+            size="small"
+          />
+        ) : (
+          <Typography
+            className={classes.typographyPrice}
+            variant="body1"
+            color="textSecondary"
+          >
+            {renewableSourcesFeePrice} BAM
+          </Typography>
+        )}
+
         <Divider className={classes.dividerTwo} />
         <div className={classes.divSettingFour}>
           <TelevisionFee className={classes.televisionFee} fontSize="small" />
@@ -278,14 +485,74 @@ export const Settings: React.FC = () => {
             Television Fee Price
           </Typography>
         </div>
-        <Typography
-          className={classes.typographyPrice}
-          variant="body1"
-          color="textSecondary"
-        >
-          0.006982 BAM
-        </Typography>
+        {editing ? (
+          <TextField
+            value={televisionFeePrice}
+            onChange={handleTelevisionFeePrice}
+            className={classes.editingTextField}
+            id="outlined-size-small-5"
+            defaultValue="Small"
+            variant="outlined"
+            size="small"
+          />
+        ) : (
+          <Typography
+            className={classes.typographyPriceTwo}
+            variant="body1"
+            color="textSecondary"
+          >
+            {televisionFeePrice} BAM
+          </Typography>
+        )}
+
         <Divider className={classes.dividerTwo} />
+        <div className={classes.editSettings}>
+          <Typography variant="h6" color="primary">
+            Edit your meter settings!
+          </Typography>
+          <IconButton
+            className={classes.iconButton}
+            color="primary"
+            onClick={() => setEditing((editing) => !editing)}
+          >
+            {editing ? (
+              <CheckIcon
+                onClick={() => {
+                  editSettings({
+                    variables: {
+                      data: {
+                        priceElectricity: editedPriceElectricity,
+                        measuringPointElectricity: editedMeasuringPointElectricity,
+                        priceNetworkFee: editedPriceNetworkFee,
+                        measuringPointNetworkFee: editedMeasuringPointNetworkFee,
+                        renewableSourcesFeePrice: editedRenewableSourcesFeePrice,
+                        televisionFee: editedTelevisionFee,
+                      },
+                    },
+                  }).catch((error) => {
+                    alert(error);
+                  });
+                  setEditing(editing);
+                }}
+              />
+            ) : (
+              <EditIcon
+                onClick={() => {
+                  setEditedPriceElectricity(electricityPrice);
+                  setEditedMeasuringPointElectricity(
+                    measuringLocationElectricityFee
+                  );
+                  setEditedPriceNetworkFee(networkFeePrice);
+                  setEditedMeasuringPointNetworkFee(
+                    measurementLocationNetworkFee
+                  );
+                  setEditedRenewableSourcesFeePrice(renewableSourcesFeePrice);
+                  setEditedTelevisionFee(televisionFeePrice);
+                }}
+              />
+            )}
+          </IconButton>
+        </div>
       </Paper>
     </div>
   );

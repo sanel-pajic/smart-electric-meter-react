@@ -51,3 +51,17 @@ export const UPDATE_METER_READING = gql`
     }
   }
 `;
+
+// Mutation for update meter settings
+export const UPDATE_METER_SETTINGS = gql`
+  mutation($data: MeterSettingsInput!) {
+    updateMeterSetting(data: $data) {
+      priceElectricity
+      measuringPointElectricity
+      priceNetworkFee
+      measuringPointNetworkFee
+      renewableSourcesFeePrice
+      televisionFee
+    }
+  }
+`;
