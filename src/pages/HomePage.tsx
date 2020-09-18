@@ -29,40 +29,9 @@ import { Redirect, useHistory } from "react-router-dom";
 import { useProtectedPath } from "../components/useProtectedPath";
 import { LinearMeterProgress } from "../components/LinearMeterProgress";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import dotenv from "dotenv";
 import { Settings } from "../components/Settings";
 
-dotenv.config();
 
-// const priceElectricity = process.env.REACT_APP_PRICE_ELECTRICITY;
-
-// const measuringPointElectricityPrice =
-//   process.env.REACT_APP_MEASURING_POINT_ELECTRICITY;
-
-// const priceNetworkFee = process.env.REACT_APP_PRICE_NETWORK_FEE;
-
-// const measuringPointNetworkFee =
-//   process.env.REACT_APP_MEASURING_POINT_NETWORK_FEE;
-
-// const renewableSourcesFeePrice =
-//   process.env.REACT_APP_RENEWABLE_SOURCES_FEE_PRICE;
-
-// const televisionFee = process.env.REACT_APP_TELEVISION_FEE;
-
-// console.log(
-//   "MEASURING POINT ELECTRICITY ENV",
-//   measuringPointElectricityPrice,
-//   "MEASURING POINT NETWORK FEE ENV",
-//   measuringPointNetworkFee,
-//   "RENEWABLE SOURCES FEE PRICE",
-//   renewableSourcesFeePrice,
-//   "TELEVISION FEE",
-//   televisionFee,
-//   "PRICE ELECTRICITY",
-//   priceElectricity,
-//   "PRICE NETWORK FEE",
-//   priceNetworkFee
-// );
 
 let schema = yup.object().shape({
   readingMeterValue: yup
@@ -406,8 +375,6 @@ export const HomePage: React.FC = () => {
 
                             const totalPriceNEW: number =
                               totalPriceWithVAT + televisionFeePriceNEW;
-
-                            console.log("TOTAL PRICE", totalPriceNEW);
 
                             addMeterReading({
                               variables: {

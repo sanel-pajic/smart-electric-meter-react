@@ -56,6 +56,7 @@ export const UPDATE_METER_READING = gql`
 export const UPDATE_METER_SETTINGS = gql`
   mutation($data: MeterSettingsInput!) {
     updateMeterSetting(data: $data) {
+      _id
       priceElectricity
       measuringPointElectricity
       priceNetworkFee

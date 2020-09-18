@@ -11,11 +11,12 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
+  Button,
 } from "@material-ui/core";
 import { useChart } from "../components/useChart";
 import { CircularLoading } from "../components/CircularLoading";
 import { useProtectedPath } from "../components/useProtectedPath";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   root: { height: "50%", width: "80%" },
@@ -29,6 +30,7 @@ const useStyles = makeStyles(() => ({
   },
   mainDiv: {
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -44,8 +46,10 @@ const useStyles = makeStyles(() => ({
   typographyDiv: {
     display: "flex",
     justifyContent: "center",
-    aligItems: "center",
+    alignItems: "center",
   },
+  button: { position: "relative", top: "3vh" },
+  buttonMedia: { position: "relative", top: "9vh" },
 }));
 
 export const MeterMonthlyReviewPage = (props: {
@@ -76,7 +80,7 @@ export const MeterMonthlyReviewPage = (props: {
             className={classes.cardHeader}
             variant={matches ? "h5" : "h6"}
           >
-            Consumption Per Month
+            Consumption Electricity Per Month
           </Typography>
         </div>
 
@@ -93,6 +97,15 @@ export const MeterMonthlyReviewPage = (props: {
           </Typography>
         </CardActions>
       </Card>
+      <Link to="/home" style={{ textDecoration: "none" }}>
+        <Button
+          variant="outlined"
+          color="default"
+          className={matches ? classes.button : classes.buttonMedia}
+        >
+          Back to home
+        </Button>
+      </Link>
     </div>
   );
 };

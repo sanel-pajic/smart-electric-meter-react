@@ -26,6 +26,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import CheckIcon from "@material-ui/icons/Check";
 import { useMutation } from "@apollo/react-hooks";
 import { UPDATE_METER_SETTINGS } from "../graphql-queries-mutations/mutations";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -188,39 +191,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ID_SETTINGS = process.env.REACT_APP_SETTINGS_ID;
+
 export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
   data,
 }) => {
   const classes = useStyles();
   const [editing, setEditing] = useState(false);
 
-  const electricityPriceNEW = data.meterSettings[0].priceElectricity;
+  const electricityPrice = data.meterSettings[0].priceElectricity;
 
-  const [electricityPrice, setElectricityPrice] = useState(electricityPriceNEW);
-  const measuringLocationElectricityFeeNEW =
+  const measuringLocationElectricityFee =
     data.meterSettings[0].measuringPointElectricity;
-  const [
-    measuringLocationElectricityFee,
-    setMeasuringLocationElectricityFee,
-  ] = useState(measuringLocationElectricityFeeNEW);
-  const networkFeePriceNEW = data.meterSettings[0].priceNetworkFee;
-  const [networkFeePrice, setNetworkFeePrice] = useState(networkFeePriceNEW);
-  const measurementLocationNetworkFeeNEW =
-    data.meterSettings[0].measuringPointNetworkFee;
-  const [
-    measurementLocationNetworkFee,
-    setMeasurementLocationNetworkFee,
-  ] = useState(measurementLocationNetworkFeeNEW);
 
-  const renewableSourcesFeePriceNEW =
+  const networkFeePrice = data.meterSettings[0].priceNetworkFee;
+
+  const measurementLocationNetworkFee =
+    data.meterSettings[0].measuringPointNetworkFee;
+
+  const renewableSourcesFeePrice =
     data.meterSettings[0].renewableSourcesFeePrice;
-  const [renewableSourcesFeePrice, setRenewableSourcesFeePrice] = useState(
-    renewableSourcesFeePriceNEW
-  );
-  const televisionFeePriceNEW = data.meterSettings[0].televisionFee;
-  const [televisionFeePrice, setTelevisionFeePrice] = useState(
-    televisionFeePriceNEW
-  );
+
+  const televisionFeePrice = data.meterSettings[0].televisionFee;
 
   const [editedPriceElectricity, setEditedPriceElectricity] = useState("");
   const [
@@ -250,42 +242,42 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value } = e.target;
-    setElectricityPrice(value);
+    setEditedPriceElectricity(value);
   };
 
   const handleMeasuringLocationElectricityFee = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value } = e.target;
-    setMeasuringLocationElectricityFee(value);
+    setEditedMeasuringPointElectricity(value);
   };
 
   const handleNetworkFeePrice = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value } = e.target;
-    setNetworkFeePrice(value);
+    setEditedPriceNetworkFee(value);
   };
 
   const handleMeasurementLocationNetworkFee = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value } = e.target;
-    setMeasurementLocationNetworkFee(value);
+    setEditedMeasuringPointNetworkFee(value);
   };
 
   const handleRenewableSourcesFeePrice = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value } = e.target;
-    setRenewableSourcesFeePrice(value);
+    setEditedRenewableSourcesFeePrice(value);
   };
 
   const handleTelevisionFeePrice = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value } = e.target;
-    setTelevisionFeePrice(value);
+    setEditedTelevisionFee(value);
   };
 
   return (
@@ -316,11 +308,10 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
         </div>
         {editing ? (
           <TextField
-            value={electricityPrice}
+            value={editedPriceElectricity}
             onChange={handleEditingElectricityPrice}
             className={classes.editingTextField}
             id="outlined-size-small-1"
-            defaultValue="Small"
             variant="outlined"
             size="small"
           />
@@ -354,11 +345,10 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
         </div>
         {editing ? (
           <TextField
-            value={measuringLocationElectricityFee}
+            value={editedMeasuringPointElectricity}
             onChange={handleMeasuringLocationElectricityFee}
             className={classes.editingTextField}
             id="outlined-size-small-2"
-            defaultValue="Small"
             variant="outlined"
             size="small"
           />
@@ -386,11 +376,10 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
         </div>
         {editing ? (
           <TextField
-            value={networkFeePrice}
+            value={editedPriceNetworkFee}
             onChange={handleNetworkFeePrice}
             className={classes.editingTextField}
             id="outlined-size-small-3"
-            defaultValue="Small"
             variant="outlined"
             size="small"
           />
@@ -424,11 +413,10 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
         </div>
         {editing ? (
           <TextField
-            value={measurementLocationNetworkFee}
+            value={editedMeasuringPointNetworkFee}
             onChange={handleMeasurementLocationNetworkFee}
             className={classes.editingTextField}
             id="outlined-size-small-4"
-            defaultValue="Small"
             variant="outlined"
             size="small"
           />
@@ -456,11 +444,10 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
         </div>
         {editing ? (
           <TextField
-            value={renewableSourcesFeePrice}
+            value={editedRenewableSourcesFeePrice}
             onChange={handleRenewableSourcesFeePrice}
             className={classes.editingTextField}
             id="outlined-size-small-5"
-            defaultValue="Small"
             variant="outlined"
             size="small"
           />
@@ -487,11 +474,10 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
         </div>
         {editing ? (
           <TextField
-            value={televisionFeePrice}
+            value={editedTelevisionFee}
             onChange={handleTelevisionFeePrice}
             className={classes.editingTextField}
-            id="outlined-size-small-5"
-            defaultValue="Small"
+            id="outlined-size-small-6"
             variant="outlined"
             size="small"
           />
@@ -510,46 +496,48 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           <Typography variant="h6" color="primary">
             Edit your meter settings!
           </Typography>
-          <IconButton
-            className={classes.iconButton}
-            color="primary"
-            onClick={() => setEditing((editing) => !editing)}
-          >
+          <IconButton className={classes.iconButton} color="primary">
             {editing ? (
-              <CheckIcon
-                onClick={() => {
-                  editSettings({
-                    variables: {
-                      data: {
-                        priceElectricity: editedPriceElectricity,
-                        measuringPointElectricity: editedMeasuringPointElectricity,
-                        priceNetworkFee: editedPriceNetworkFee,
-                        measuringPointNetworkFee: editedMeasuringPointNetworkFee,
-                        renewableSourcesFeePrice: editedRenewableSourcesFeePrice,
-                        televisionFee: editedTelevisionFee,
+              <div>
+                <CheckIcon
+                  onClick={() => {
+                    editSettings({
+                      variables: {
+                        data: {
+                          _id: ID_SETTINGS,
+                          priceElectricity: editedPriceElectricity,
+                          measuringPointElectricity: editedMeasuringPointElectricity,
+                          priceNetworkFee: editedPriceNetworkFee,
+                          measuringPointNetworkFee: editedMeasuringPointNetworkFee,
+                          renewableSourcesFeePrice: editedRenewableSourcesFeePrice,
+                          televisionFee: editedTelevisionFee,
+                        },
                       },
-                    },
-                  }).catch((error) => {
-                    alert(error);
-                  });
-                  setEditing(editing);
-                }}
-              />
+                    }).catch((error) => {
+                      alert(error);
+                    });
+                    setEditing(!editing);
+                  }}
+                />
+              </div>
             ) : (
-              <EditIcon
-                onClick={() => {
-                  setEditedPriceElectricity(electricityPrice);
-                  setEditedMeasuringPointElectricity(
-                    measuringLocationElectricityFee
-                  );
-                  setEditedPriceNetworkFee(networkFeePrice);
-                  setEditedMeasuringPointNetworkFee(
-                    measurementLocationNetworkFee
-                  );
-                  setEditedRenewableSourcesFeePrice(renewableSourcesFeePrice);
-                  setEditedTelevisionFee(televisionFeePrice);
-                }}
-              />
+              <div>
+                <EditIcon
+                  onClick={() => {
+                    setEditing(!editing);
+                    setEditedPriceElectricity(electricityPrice);
+                    setEditedMeasuringPointElectricity(
+                      measuringLocationElectricityFee
+                    );
+                    setEditedPriceNetworkFee(networkFeePrice);
+                    setEditedMeasuringPointNetworkFee(
+                      measurementLocationNetworkFee
+                    );
+                    setEditedRenewableSourcesFeePrice(renewableSourcesFeePrice);
+                    setEditedTelevisionFee(televisionFeePrice);
+                  }}
+                />
+              </div>
             )}
           </IconButton>
         </div>

@@ -14,7 +14,7 @@ export const useChart = () => {
   }
 
   const consumptionPerMonth = data.meterReadings.map(
-    (reading: any) => reading.consumption
+    (reading: any) => reading.consumptionElectricity
   );
 
   const dataChart = {

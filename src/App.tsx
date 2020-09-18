@@ -10,9 +10,14 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { AuthorizePage } from "./pages/AuthorizePage";
 import { MeterMonthlyReviewPage } from "./pages/MeterMonthlyReviewPage";
 import { Settings } from "./components/Settings";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const uri_apollo = process.env.REACT_APP_URI_APOLLO_CLIENT;
 
 export const client = new ApolloClient({
-  uri: "http://localhost:8000/graphql",
+  uri: uri_apollo,
   onError: ({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
       graphQLErrors.map(
@@ -76,11 +81,10 @@ const App: React.FC = () => {
         <div>
           <BrowserRouter>
             <Header />
-
             <Switch>
+              <Route exact path="/authorize" component={AuthorizePage} />
               <Route exact path="/" component={LoginPage} />
               <Route exact path="/home" component={HomePage} />
-              <Route exact path="/authorize" component={AuthorizePage} />
               <Route
                 exact
                 path="/statistics"
