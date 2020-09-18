@@ -2,7 +2,7 @@ import { useStore } from "react-stores";
 import { store } from "./store";
 import { useRouteMatch } from "react-router";
 
-const PROTECTED_PATHS = ["/home", "/statistics"];
+const PROTECTED_PATHS = ["/home", "/statistics", "/settings"];
 
 export const useProtectedPath = () => {
   const { authorized } = useStore(store);

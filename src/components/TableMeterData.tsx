@@ -46,6 +46,7 @@ const useStyles = makeStyles({
   },
   tableMedia: {},
   tableColumn: { fontSize: 18 },
+  tableColumnMedia: { fontSize: 16 },
   editIcon: { width: 24, height: 24, position: "relative", bottom: 11 },
 });
 
@@ -187,48 +188,102 @@ export const TableMeterData: React.FC<{ data: { [key: string]: any } }> = ({
         <Table
           className={matches ? classes.table : classes.tableMedia}
           stickyHeader
-          aria-label="sticky table"
+          aria-label={matches ? "sticky table" : "a dense table"}
+          size={matches ? undefined : "small"}
         >
           <TableHead>
             <TableRow>
               <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>Date</Typography>
+                <Typography
+                  className={
+                    matches ? classes.tableColumn : classes.tableColumnMedia
+                  }
+                >
+                  Date
+                </Typography>
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>
+                <Typography
+                  className={
+                    matches ? classes.tableColumn : classes.tableColumnMedia
+                  }
+                >
                   Reading Month/Year
                 </Typography>
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>
+                <Typography
+                  className={
+                    matches ? classes.tableColumn : classes.tableColumnMedia
+                  }
+                >
                   Initial Meter Value
                 </Typography>
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>
+                <Typography
+                  className={
+                    matches ? classes.tableColumn : classes.tableColumnMedia
+                  }
+                >
                   Reading Meter Value
                 </Typography>
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>
+                <Typography
+                  className={
+                    matches ? classes.tableColumn : classes.tableColumnMedia
+                  }
+                >
                   Consumption (A) kWh
                 </Typography>
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>
+                <Typography
+                  className={
+                    matches ? classes.tableColumn : classes.tableColumnMedia
+                  }
+                >
                   Network fee (B) kWh
                 </Typography>
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>
-                  Total (A+B) BAM incl.VAT 17%
+                {matches ? (
+                  <Typography
+                    className={
+                      matches ? classes.tableColumn : classes.tableColumnMedia
+                    }
+                  >
+                    Total (A+B) BAM incl.VAT 17%
+                  </Typography>
+                ) : (
+                  <div>
+                    <Typography className={classes.tableColumnMedia}>
+                      Total
+                    </Typography>
+                    <Typography className={classes.tableColumnMedia}>
+                      incl VAT
+                    </Typography>
+                  </div>
+                )}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <Typography
+                  className={
+                    matches ? classes.tableColumn : classes.tableColumnMedia
+                  }
+                >
+                  Edit{" "}
                 </Typography>
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>Edit </Typography>
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                <Typography className={classes.tableColumn}>Delete </Typography>
+                <Typography
+                  className={
+                    matches ? classes.tableColumn : classes.tableColumnMedia
+                  }
+                >
+                  Delete{" "}
+                </Typography>
               </StyledTableCell>
             </TableRow>
           </TableHead>

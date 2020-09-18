@@ -7,6 +7,7 @@ import {
   useMediaQuery,
   TextField,
   Divider,
+  IconButton,
 } from "@material-ui/core";
 import {
   createStyles,
@@ -30,8 +31,7 @@ import { useProtectedPath } from "../components/useProtectedPath";
 import { LinearMeterProgress } from "../components/LinearMeterProgress";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { Settings } from "../components/Settings";
-
-
+import SettingsIcon from "@material-ui/icons/Settings";
 
 let schema = yup.object().shape({
   readingMeterValue: yup
@@ -171,6 +171,19 @@ const useStyles = makeStyles((theme: Theme) =>
     typographyListAllMedia: { marginTop: 24, fontSize: 22 },
     buttonStatistics: { marginBottom: 30 },
     settings: { marginLeft: "4%" },
+    settingsDiv: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 10,
+    },
+    settingsIcon: {
+      width: 30,
+      height: 30,
+      marginTop: 4,
+      marginBottom: 4,
+    },
   })
 );
 
@@ -259,6 +272,19 @@ export const HomePage: React.FC = () => {
             <div className={classes.divMeter}>
               <LinearMeterProgress />
             </div>
+            {matches ? undefined : (
+              <div className={classes.settingsDiv}>
+                <Typography variant="h6" color="textSecondary">
+                  Edit Meter Settings
+                </Typography>
+                <IconButton onClick={() => history.push("/settings")}>
+                  <SettingsIcon
+                    className={classes.settingsIcon}
+                    color="action"
+                  />
+                </IconButton>
+              </div>
+            )}
 
             <div className={classes.divValues}>
               {!matches ? (
@@ -427,9 +453,11 @@ export const HomePage: React.FC = () => {
               ) : null}
             </div>
           </div>
-          <div className={classes.settings}>
-            <Settings data={SettingsData} />
-          </div>
+          {matches ? (
+            <div className={classes.settings}>
+              <Settings data={SettingsData} />
+            </div>
+          ) : null}
         </div>
         <Typography
           variant={matches ? "h4" : "h5"}

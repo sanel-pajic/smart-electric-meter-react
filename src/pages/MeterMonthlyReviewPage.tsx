@@ -17,6 +17,7 @@ import { useChart } from "../components/useChart";
 import { CircularLoading } from "../components/CircularLoading";
 import { useProtectedPath } from "../components/useProtectedPath";
 import { Redirect, Link } from "react-router-dom";
+import { deepOrange } from "@material-ui/core/colors";
 
 const useStyles = makeStyles(() => ({
   root: { height: "50%", width: "80%" },
@@ -37,11 +38,13 @@ const useStyles = makeStyles(() => ({
   mainDivMedia: {
     display: "flex",
     justifyContent: "center",
+    flexDirection: "column",
     alignItems: "center",
     position: "relative",
     top: 30,
   },
-  cardHeader: { padding: 16 },
+  cardHeader: { padding: 16, color: deepOrange[700], fontSize: 28 },
+  cardHeaderMedia: { padding: 4, color: deepOrange[600], fontWeight: "bold" },
 
   typographyDiv: {
     display: "flex",
@@ -49,7 +52,7 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
   },
   button: { position: "relative", top: "3vh" },
-  buttonMedia: { position: "relative", top: "9vh" },
+  buttonMedia: { marginBottom: 50, marginTop: 20 },
 }));
 
 export const MeterMonthlyReviewPage = (props: {
@@ -77,8 +80,8 @@ export const MeterMonthlyReviewPage = (props: {
       <Card {...rest} className={clsx(classes.root, className)} component="div">
         <div className={matches ? undefined : classes.typographyDiv}>
           <Typography
-            className={classes.cardHeader}
-            variant={matches ? "h5" : "h6"}
+            className={matches ? classes.cardHeader : classes.cardHeaderMedia}
+            variant={matches ? "h5" : "overline"}
           >
             Consumption Electricity Per Month
           </Typography>
