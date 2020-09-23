@@ -6,6 +6,8 @@ import {
   Typography,
   IconButton,
   TextField,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ElectricityIcon from "@material-ui/icons/EmojiObjectsOutlined";
@@ -39,6 +41,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
   },
+  paperMedia: {
+    width: 380,
+    height: 550,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+  },
   paperEditing: {
     width: 400,
     height: 850,
@@ -51,6 +61,15 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: 10,
   },
+  dividerMedia: {
+    width: "100%",
+  },
+  dividerMediaEditing: {
+    width: 380,
+    marginTop: 5,
+    position: "relative",
+    bottom: 50,
+  },
   dividerTwo: {
     width: 320,
     marginTop: 0,
@@ -58,11 +77,58 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     bottom: 25,
   },
+  dividerTwoMedia: {
+    width: 260,
+    marginTop: 0,
+    marginLeft: 50,
+    position: "relative",
+    bottom: 37,
+  },
+  dividerTwoMediaMeasurementLocationNetworkFee: {
+    width: 260,
+    marginTop: 0,
+    marginLeft: 50,
+    position: "relative",
+    bottom: 55,
+  },
+  dividerTwoMediaIcon: {
+    width: 260,
+    marginTop: 0,
+    marginLeft: 50,
+    position: "relative",
+    bottom: 23,
+  },
+  dividerTwoMediaIconNetworkFeePrice: {
+    width: 260,
+    marginTop: 0,
+    marginLeft: 50,
+    position: "relative",
+    bottom: 43,
+  },
+  dividerTwoMediaIconRenewableSources: {
+    width: 260,
+    marginTop: 0,
+    marginLeft: 50,
+    position: "relative",
+    bottom: 70,
+  },
+  dividerTwoMediaIconTelevisionFee: {
+    width: 260,
+    marginTop: 0,
+    marginLeft: 50,
+    position: "relative",
+    bottom: 77,
+  },
   settings: {
     width: 35,
     height: 35,
     marginTop: 20,
     marginBottom: 4,
+  },
+  settingsMedia: {
+    width: 30,
+    height: 30,
+    marginTop: 10,
   },
   electricityIcon: {
     color: theme.palette.getContrastText(blue[500]),
@@ -72,6 +138,14 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     marginRight: 60,
   },
+  electricityIconMedia: {
+    color: theme.palette.getContrastText(blue[500]),
+    backgroundColor: blue[400],
+    height: 45,
+    width: 45,
+    borderRadius: 10,
+    marginRight: 10,
+  },
   networkFee: {
     color: theme.palette.getContrastText(green[600]),
     backgroundColor: green[400],
@@ -79,6 +153,15 @@ const useStyles = makeStyles((theme) => ({
     width: 35,
     borderRadius: 10,
     marginRight: 40,
+    padding: 5,
+  },
+  networkFeeMedia: {
+    color: theme.palette.getContrastText(green[600]),
+    backgroundColor: green[400],
+    height: 35,
+    width: 35,
+    borderRadius: 10,
+    marginRight: -14,
     padding: 5,
   },
   windMill: {
@@ -107,6 +190,22 @@ const useStyles = makeStyles((theme) => ({
     right: 70,
     marginTop: 20,
   },
+  divSettingMedia: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 65,
+    marginTop: 15,
+  },
+  divSettingMediaNetworkFee: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 65,
+    bottom: 20,
+  },
   divSettingTwo: {
     display: "flex",
     justifyContent: "center",
@@ -114,6 +213,22 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     right: 75,
     marginTop: 20,
+  },
+  divSettingTwoMedia: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 43,
+    bottom: 10,
+  },
+  divSettingTwoMediaMeasurementLocationNetworkFee: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 43,
+    bottom: 30,
   },
   divSettingThree: {
     display: "flex",
@@ -123,6 +238,14 @@ const useStyles = makeStyles((theme) => ({
     right: 85,
     marginTop: 20,
   },
+  divSettingThreeMedia: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 53,
+    bottom: 45,
+  },
   divSettingFour: {
     display: "flex",
     justifyContent: "center",
@@ -131,10 +254,42 @@ const useStyles = makeStyles((theme) => ({
     right: 65,
     marginTop: 20,
   },
+  divSettingFourMedia: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 33,
+    bottom: 55,
+  },
   typographyTitle: { position: "relative", right: 45 },
+  typographyTitleMedia: { position: "relative", right: 5 },
   typographyTitleTwo: { position: "relative", right: 25 },
+  typographyTitleTwoMedia: { position: "relative", left: 20 },
   typographyPrice: { position: "relative", left: 130, bottom: 25 },
+  typographyPriceMedia: { position: "relative", left: 100, bottom: 22 },
+  typographyPriceMediaNetworkFeePrice: {
+    position: "relative",
+    left: 100,
+    bottom: 40,
+  },
+  typographyPriceMediaRenewableSourcesFee: {
+    position: "relative",
+    left: 92,
+    bottom: 67,
+  },
   typographyPriceTwo: { position: "relative", left: 135, bottom: 25 },
+  typographyPriceTwoMedia: { position: "relative", left: 110, bottom: 35 },
+  typographyPriceTwoMediaMeasurementLocationNetworkFee: {
+    position: "relative",
+    left: 110,
+    bottom: 52,
+  },
+  typographyPriceTwoMediaTelevisionFee: {
+    position: "relative",
+    left: 110,
+    bottom: 74,
+  },
   image: {
     width: 32,
     height: 32,
@@ -167,6 +322,12 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     left: 15,
   },
+  typographyTwoMedia: {
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
+    left: 8,
+  },
   settingsDiv: {
     display: "flex",
     flexDirection: "column",
@@ -182,12 +343,79 @@ const useStyles = makeStyles((theme) => ({
     left: 20,
     marginBottom: 10,
   },
+  editSettingsMedia: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    left: 10,
+    bottom: 60,
+    marginBottom: 10,
+  },
+  editSettingsMediaTwo: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    left: 10,
+    bottom: 35,
+    marginBottom: 10,
+  },
   iconButton: { marginLeft: 10 },
   editingTextField: {
     position: "relative",
     left: 130,
     bottom: 40,
     width: 110,
+  },
+  editingTextFieldMedia: {
+    position: "relative",
+    left: 100,
+    bottom: 40,
+    width: 100,
+    height: 18,
+  },
+  editingTextFieldMediaOne: {
+    position: "relative",
+    left: 130,
+    bottom: 40,
+    width: 100,
+    height: 18,
+  },
+  editingTextFieldMediaTwo: {
+    position: "relative",
+    left: 130,
+    bottom: 55,
+    width: 100,
+    height: 18,
+  },
+  editingTextFieldMediaThree: {
+    position: "relative",
+    left: 130,
+    bottom: 60,
+    width: 100,
+    height: 18,
+  },
+  editingTextFieldMediaFour: {
+    position: "relative",
+    left: 130,
+    bottom: 75,
+    width: 100,
+    height: 18,
+  },
+  editingTextFieldMediaFive: {
+    position: "relative",
+    left: 130,
+    bottom: 90,
+    width: 100,
+    height: 18,
+  },
+  editingTextFieldMediaSix: {
+    position: "relative",
+    left: 130,
+    bottom: 95,
+    width: 100,
+    height: 18,
   },
 }));
 
@@ -198,6 +426,8 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
 }) => {
   const classes = useStyles();
   const [editing, setEditing] = useState(false);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const electricityPrice = data.meterSettings[0].priceElectricity;
 
@@ -288,20 +518,37 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
         alignItems: "center",
       }}
     >
-      <Paper className={!editing ? classes.paper : classes.paperEditing}>
+      <Paper
+        className={
+          matches
+            ? !editing
+              ? classes.paper
+              : classes.paperEditing
+            : classes.paperMedia
+        }
+      >
         <div className={classes.settingsDiv}>
-          <SettingsIcon className={classes.settings} color="action" />
-          <Typography variant="h5" color="textSecondary">
+          <SettingsIcon
+            className={matches ? classes.settings : classes.settingsMedia}
+            color="action"
+          />
+          <Typography variant={matches ? "h5" : "h6"} color="textSecondary">
             Meter Settings
           </Typography>
         </div>
-        <Divider className={classes.divider} />
-        <div className={classes.divSetting}>
-          <ElectricityIcon className={classes.electricityIcon} />
+        <Divider className={matches ? classes.divider : classes.dividerMedia} />
+        <div className={matches ? classes.divSetting : classes.divSettingMedia}>
+          <ElectricityIcon
+            className={
+              matches ? classes.electricityIcon : classes.electricityIconMedia
+            }
+          />
           <Typography
             variant="subtitle1"
             color="textSecondary"
-            className={classes.typographyTitle}
+            className={
+              matches ? classes.typographyTitle : classes.typographyTitleMedia
+            }
           >
             Electricity Price
           </Typography>
@@ -310,23 +557,41 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           <TextField
             value={editedPriceElectricity}
             onChange={handleEditingElectricityPrice}
-            className={classes.editingTextField}
+            className={
+              matches
+                ? classes.editingTextField
+                : !editing
+                ? classes.editingTextFieldMedia
+                : classes.editingTextFieldMediaOne
+            }
             id="outlined-size-small-1"
             variant="outlined"
             size="small"
           />
         ) : (
           <Typography
-            className={classes.typographyPrice}
+            className={
+              matches ? classes.typographyPrice : classes.typographyPriceMedia
+            }
             variant="body1"
             color="textSecondary"
           >
             {electricityPrice} BAM
           </Typography>
         )}
+        {editing ? undefined : (
+          <Divider
+            className={
+              matches ? classes.dividerTwo : classes.dividerTwoMediaIcon
+            }
+          />
+        )}
 
-        <Divider className={classes.dividerTwo} />
-        <div className={classes.divSettingTwo}>
+        <div
+          className={
+            matches ? classes.divSettingTwo : classes.divSettingTwoMedia
+          }
+        >
           <div className={classes.imageDivTwo}>
             <img
               src={electricIconImage}
@@ -334,7 +599,11 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
               className={classes.imageElectric}
             />
           </div>
-          <div className={classes.typographyTwo}>
+          <div
+            className={
+              matches ? classes.typographyTwo : classes.typographyTwoMedia
+            }
+          >
             <Typography variant="subtitle1" color="textSecondary">
               Measurement Location
             </Typography>
@@ -347,14 +616,24 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           <TextField
             value={editedMeasuringPointElectricity}
             onChange={handleMeasuringLocationElectricityFee}
-            className={classes.editingTextField}
+            className={
+              matches
+                ? classes.editingTextField
+                : !editing
+                ? classes.editingTextFieldMedia
+                : classes.editingTextFieldMediaTwo
+            }
             id="outlined-size-small-2"
             variant="outlined"
             size="small"
           />
         ) : (
           <Typography
-            className={classes.typographyPriceTwo}
+            className={
+              matches
+                ? classes.typographyPriceTwo
+                : classes.typographyPriceTwoMedia
+            }
             variant="body1"
             color="textSecondary"
           >
@@ -362,14 +641,28 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           </Typography>
         )}
 
-        <Divider className={classes.dividerTwo} />
+        {editing ? undefined : (
+          <Divider
+            className={matches ? classes.dividerTwo : classes.dividerTwoMedia}
+          />
+        )}
 
-        <div className={classes.divSetting}>
-          <NetworkFee className={classes.networkFee} />
+        <div
+          className={
+            matches ? classes.divSetting : classes.divSettingMediaNetworkFee
+          }
+        >
+          <NetworkFee
+            className={matches ? classes.networkFee : classes.networkFeeMedia}
+          />
           <Typography
             variant="subtitle1"
             color="textSecondary"
-            className={classes.typographyTitleTwo}
+            className={
+              matches
+                ? classes.typographyTitleTwo
+                : classes.typographyTitleTwoMedia
+            }
           >
             Network Fee Price
           </Typography>
@@ -378,14 +671,24 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           <TextField
             value={editedPriceNetworkFee}
             onChange={handleNetworkFeePrice}
-            className={classes.editingTextField}
+            className={
+              matches
+                ? classes.editingTextField
+                : !editing
+                ? classes.editingTextFieldMedia
+                : classes.editingTextFieldMediaThree
+            }
             id="outlined-size-small-3"
             variant="outlined"
             size="small"
           />
         ) : (
           <Typography
-            className={classes.typographyPrice}
+            className={
+              matches
+                ? classes.typographyPrice
+                : classes.typographyPriceMediaNetworkFeePrice
+            }
             variant="body1"
             color="textSecondary"
           >
@@ -393,8 +696,23 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           </Typography>
         )}
 
-        <Divider className={classes.dividerTwo} />
-        <div className={classes.divSettingTwo}>
+        {editing ? undefined : (
+          <Divider
+            className={
+              matches
+                ? classes.dividerTwo
+                : classes.dividerTwoMediaIconNetworkFeePrice
+            }
+          />
+        )}
+
+        <div
+          className={
+            matches
+              ? classes.divSettingTwo
+              : classes.divSettingTwoMediaMeasurementLocationNetworkFee
+          }
+        >
           <div className={classes.imageDiv}>
             <img
               src={electricGridImage}
@@ -415,23 +733,45 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           <TextField
             value={editedMeasuringPointNetworkFee}
             onChange={handleMeasurementLocationNetworkFee}
-            className={classes.editingTextField}
+            className={
+              matches
+                ? classes.editingTextField
+                : !editing
+                ? classes.editingTextFieldMedia
+                : classes.editingTextFieldMediaFour
+            }
             id="outlined-size-small-4"
             variant="outlined"
             size="small"
           />
         ) : (
           <Typography
-            className={classes.typographyPriceTwo}
+            className={
+              matches
+                ? classes.typographyPriceTwo
+                : classes.typographyPriceTwoMediaMeasurementLocationNetworkFee
+            }
             variant="body1"
             color="textSecondary"
           >
             {measurementLocationNetworkFee} BAM
           </Typography>
         )}
+        {editing ? undefined : (
+          <Divider
+            className={
+              matches
+                ? classes.dividerTwo
+                : classes.dividerTwoMediaMeasurementLocationNetworkFee
+            }
+          />
+        )}
 
-        <Divider className={classes.dividerTwo} />
-        <div className={classes.divSettingThree}>
+        <div
+          className={
+            matches ? classes.divSettingThree : classes.divSettingThreeMedia
+          }
+        >
           <WindMill className={classes.windMill} />
           <div className={classes.typographyTwo}>
             <Typography variant="subtitle1" color="textSecondary">
@@ -446,14 +786,24 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           <TextField
             value={editedRenewableSourcesFeePrice}
             onChange={handleRenewableSourcesFeePrice}
-            className={classes.editingTextField}
+            className={
+              matches
+                ? classes.editingTextField
+                : !editing
+                ? classes.editingTextFieldMedia
+                : classes.editingTextFieldMediaFive
+            }
             id="outlined-size-small-5"
             variant="outlined"
             size="small"
           />
         ) : (
           <Typography
-            className={classes.typographyPrice}
+            className={
+              matches
+                ? classes.typographyPrice
+                : classes.typographyPriceMediaRenewableSourcesFee
+            }
             variant="body1"
             color="textSecondary"
           >
@@ -461,8 +811,21 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           </Typography>
         )}
 
-        <Divider className={classes.dividerTwo} />
-        <div className={classes.divSettingFour}>
+        {editing ? undefined : (
+          <Divider
+            className={
+              matches
+                ? classes.dividerTwo
+                : classes.dividerTwoMediaIconRenewableSources
+            }
+          />
+        )}
+
+        <div
+          className={
+            matches ? classes.divSettingFour : classes.divSettingFourMedia
+          }
+        >
           <TelevisionFee className={classes.televisionFee} fontSize="small" />
           <Typography
             variant="subtitle1"
@@ -476,23 +839,51 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           <TextField
             value={editedTelevisionFee}
             onChange={handleTelevisionFeePrice}
-            className={classes.editingTextField}
+            className={
+              matches
+                ? classes.editingTextField
+                : !editing
+                ? classes.editingTextFieldMedia
+                : classes.editingTextFieldMediaSix
+            }
             id="outlined-size-small-6"
             variant="outlined"
             size="small"
           />
         ) : (
           <Typography
-            className={classes.typographyPriceTwo}
+            className={
+              matches
+                ? classes.typographyPriceTwo
+                : classes.typographyPriceTwoMediaTelevisionFee
+            }
             variant="body1"
             color="textSecondary"
           >
             {televisionFeePrice} BAM
           </Typography>
         )}
+        {editing ? (
+          <Divider className={classes.dividerMediaEditing} />
+        ) : (
+          <Divider
+            className={
+              matches
+                ? classes.dividerTwo
+                : classes.dividerTwoMediaIconTelevisionFee
+            }
+          />
+        )}
 
-        <Divider className={classes.dividerTwo} />
-        <div className={classes.editSettings}>
+        <div
+          className={
+            matches
+              ? classes.editSettings
+              : !editing
+              ? classes.editSettingsMedia
+              : classes.editSettingsMediaTwo
+          }
+        >
           <Typography variant="h6" color="primary">
             Edit your meter settings!
           </Typography>

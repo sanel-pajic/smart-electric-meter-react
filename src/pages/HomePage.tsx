@@ -32,10 +32,14 @@ import { LinearMeterProgress } from "../components/LinearMeterProgress";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { Settings } from "../components/Settings";
 import SettingsIcon from "@material-ui/icons/Settings";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
 
 let schema = yup.object().shape({
   readingMeterValue: yup
     .string()
+    .required("Meter Value is required.")
     .test(
       "Meter Value",
       "Must be exactly 5 characters",
@@ -139,6 +143,8 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
+      position: "relative",
+      bottom: 30,
     },
     meterSettingsDiv: {
       display: "flex",
@@ -164,7 +170,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       position: "relative",
-      top: 15,
+      bottom: 30,
       padding: 15,
     },
     dividerHome: { width: "100%", marginTop: 20 },
@@ -181,8 +187,24 @@ const useStyles = makeStyles((theme: Theme) =>
     settingsIcon: {
       width: 30,
       height: 30,
-      marginTop: 4,
+      marginTop: 8,
       marginBottom: 4,
+      position: "relative",
+      bottom: 20,
+    },
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 80,
+    },
+    paperModal: {
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(1, 4, 0),
+      width: 250,
+      height: 550,
     },
   })
 );
@@ -197,6 +219,7 @@ export const HomePage: React.FC = () => {
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const history = useHistory();
   const accessGrant = useProtectedPath();
+  const [open, setOpen] = useState(false);
 
   const { data: MeterReadingsData, loading: MeterReadingsLoading } = useQuery(
     READINGS_QUERY,
@@ -264,6 +287,13 @@ export const HomePage: React.FC = () => {
     }, 100);
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div className={classes.rootDiv}>
       <Paper className={matches ? classes.paper : classes.paperMedia}>
@@ -275,13 +305,31 @@ export const HomePage: React.FC = () => {
             {matches ? undefined : (
               <div className={classes.settingsDiv}>
                 <Typography variant="h6" color="textSecondary">
-                  Edit Meter Settings
+                  Meter Settings
                 </Typography>
-                <IconButton onClick={() => history.push("/settings")}>
+                <IconButton onClick={handleOpen}>
                   <SettingsIcon
                     className={classes.settingsIcon}
                     color="action"
                   />
+                  <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={open}
+                    onClose={handleClose}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                      timeout: 500,
+                    }}
+                  >
+                    <Fade in={open}>
+                      <div className={classes.paperModal}>
+                        <Settings data={SettingsData} />
+                      </div>
+                    </Fade>
+                  </Modal>
                 </IconButton>
               </div>
             )}
