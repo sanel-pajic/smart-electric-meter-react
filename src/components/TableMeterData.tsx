@@ -288,147 +288,150 @@ export const TableMeterData: React.FC<{ data: { [key: string]: any } }> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.meterReadings.map(
-              (
-                reading: {
-                  _id: string;
-                  date: string;
-                  initialMeterValue: string;
-                  readingMeterValue: string;
-                  consumptionElectricity: number;
-                  networkFeeConsumption: number;
-                  price: number | string;
-                  totalPrice: number;
-                },
-                index: any
-              ) => (
-                <StyledTableRow key={reading._id} id={reading._id}>
-                  <TableCell align="center">
-                    {handleDate(reading.date)}
-                  </TableCell>
-                  <TableCell align="center">
-                    {handleMonthYear(reading.date)}
-                  </TableCell>
-                  <TableCell align="center">
-                    {reading.initialMeterValue}
-                  </TableCell>
-                  {editingID !== reading._id ? (
+            {data.meterReadings
+              .map(
+                (
+                  reading: {
+                    _id: string;
+                    date: string;
+                    initialMeterValue: string;
+                    readingMeterValue: string;
+                    consumptionElectricity: number;
+                    networkFeeConsumption: number;
+                    price: number | string;
+                    totalPrice: number;
+                  },
+                  index: any
+                ) => (
+                  <StyledTableRow key={reading._id} id={reading._id}>
                     <TableCell align="center">
-                      {reading.readingMeterValue}
+                      {handleDate(reading.date)}
                     </TableCell>
-                  ) : (
-                    <TableCell component="th" scope="row">
-                      <TextField
-                        variant="outlined"
-                        fullWidth
-                        inputProps={inputProps}
-                        value={editedReadingMeterValue}
-                        onChange={handleEditingMeterReading}
-                      />
+                    <TableCell align="center">
+                      {handleMonthYear(reading.date)}
                     </TableCell>
-                  )}
-
-                  <TableCell align="center">
-                    {reading.consumptionElectricity}
-                  </TableCell>
-                  <TableCell align="center">
-                    {reading.networkFeeConsumption}
-                  </TableCell>
-
-                  <TableCell align="center">
-                    {ccyFormat(reading.totalPrice)}
-                  </TableCell>
-                  <TableCell align="center">
-                    <div className={classes.editIcon}>
-                      <IconButton
-                        disabled={
-                          !possibleDeleteEditReading[index].possibleDeleteEdit
-                            ? true
-                            : false
-                        }
-                      >
-                        {possibleDeleteEditReading[index].possibleDeleteEdit ? (
-                          <div>
-                            {editingID === reading._id ? (
-                              <div>
-                                <CheckIcon
-                                  onClick={() => {
-                                    editMeterReading({
-                                      variables: {
-                                        data: {
-                                          _id: reading._id,
-                                          date: editedDate,
-                                          initialMeterValue: editedInitialMeterValue,
-                                          readingMeterValue: editedReadingMeterValue,
-                                          consumptionElectricity: editedConsumptionElectricity,
-                                          networkFeeConsumption: editedNetworkFeeConsumption,
-                                          totalPrice: editedTotalPrice,
-                                        },
-                                      },
-                                    }).catch((error) => {
-                                      alert(error);
-                                    });
-                                    setEditingID(null);
-                                  }}
-                                />
-                              </div>
-                            ) : (
-                              <div>
-                                <EditIcon
-                                  onClick={() => {
-                                    setEditingID(reading._id);
-                                    setEditedDate(reading.date);
-                                    setEditedInitialMeterValue(
-                                      reading.initialMeterValue
-                                    );
-                                    setEditedReadingMeterValue(
-                                      reading.readingMeterValue
-                                    );
-                                    setEditedConsumptionElectricity(
-                                      reading.consumptionElectricity
-                                    );
-                                    setEditedNetworkFeeConsumption(
-                                      reading.networkFeeConsumption
-                                    );
-
-                                    setEditedTotalPrice(reading.totalPrice);
-                                  }}
-                                />
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <HighlightOffIcon />
-                        )}
-                      </IconButton>
-                    </div>
-                  </TableCell>
-                  <TableCell align="center">
-                    {possibleDeleteEditReading[index].possibleDeleteEdit ? (
-                      <IconButton
-                        disabled={
-                          !possibleDeleteEditReading[index].possibleDeleteEdit
-                            ? true
-                            : false
-                        }
-                        onClick={() =>
-                          removeMeterReading({
-                            variables: { _id: reading._id },
-                            refetchQueries: [{ query: READINGS_QUERY }],
-                          })
-                        }
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                    <TableCell align="center">
+                      {reading.initialMeterValue}
+                    </TableCell>
+                    {editingID !== reading._id ? (
+                      <TableCell align="center">
+                        {reading.readingMeterValue}
+                      </TableCell>
                     ) : (
-                      <IconButton disabled={true}>
-                        <HighlightOffIcon color="inherit" />
-                      </IconButton>
+                      <TableCell component="th" scope="row">
+                        <TextField
+                          variant="outlined"
+                          fullWidth
+                          inputProps={inputProps}
+                          value={editedReadingMeterValue}
+                          onChange={handleEditingMeterReading}
+                        />
+                      </TableCell>
                     )}
-                  </TableCell>
-                </StyledTableRow>
+
+                    <TableCell align="center">
+                      {reading.consumptionElectricity}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reading.networkFeeConsumption}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {ccyFormat(reading.totalPrice)}
+                    </TableCell>
+                    <TableCell align="center">
+                      <div className={classes.editIcon}>
+                        <IconButton
+                          disabled={
+                            !possibleDeleteEditReading[index].possibleDeleteEdit
+                              ? true
+                              : false
+                          }
+                        >
+                          {possibleDeleteEditReading[index]
+                            .possibleDeleteEdit ? (
+                            <div>
+                              {editingID === reading._id ? (
+                                <div>
+                                  <CheckIcon
+                                    onClick={() => {
+                                      editMeterReading({
+                                        variables: {
+                                          data: {
+                                            _id: reading._id,
+                                            date: editedDate,
+                                            initialMeterValue: editedInitialMeterValue,
+                                            readingMeterValue: editedReadingMeterValue,
+                                            consumptionElectricity: editedConsumptionElectricity,
+                                            networkFeeConsumption: editedNetworkFeeConsumption,
+                                            totalPrice: editedTotalPrice,
+                                          },
+                                        },
+                                      }).catch((error) => {
+                                        alert(error);
+                                      });
+                                      setEditingID(null);
+                                    }}
+                                  />
+                                </div>
+                              ) : (
+                                <div>
+                                  <EditIcon
+                                    onClick={() => {
+                                      setEditingID(reading._id);
+                                      setEditedDate(reading.date);
+                                      setEditedInitialMeterValue(
+                                        reading.initialMeterValue
+                                      );
+                                      setEditedReadingMeterValue(
+                                        reading.readingMeterValue
+                                      );
+                                      setEditedConsumptionElectricity(
+                                        reading.consumptionElectricity
+                                      );
+                                      setEditedNetworkFeeConsumption(
+                                        reading.networkFeeConsumption
+                                      );
+
+                                      setEditedTotalPrice(reading.totalPrice);
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <HighlightOffIcon />
+                          )}
+                        </IconButton>
+                      </div>
+                    </TableCell>
+                    <TableCell align="center">
+                      {possibleDeleteEditReading[index].possibleDeleteEdit ? (
+                        <IconButton
+                          disabled={
+                            !possibleDeleteEditReading[index].possibleDeleteEdit
+                              ? true
+                              : false
+                          }
+                          onClick={() =>
+                            removeMeterReading({
+                              variables: { _id: reading._id },
+                              refetchQueries: [{ query: READINGS_QUERY }],
+                            })
+                          }
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton disabled={true}>
+                          <HighlightOffIcon color="inherit" />
+                        </IconButton>
+                      )}
+                    </TableCell>
+                  </StyledTableRow>
+                )
               )
-            )}
+              .reverse()}
           </TableBody>
         </Table>
       </TableContainer>
