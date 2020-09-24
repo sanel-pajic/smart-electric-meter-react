@@ -36,17 +36,6 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 
-let schema = yup.object().shape({
-  readingMeterValue: yup
-    .string()
-    .required("Meter Value is required.")
-    .test(
-      "Meter Value",
-      "Must be exactly 5 characters",
-      (val) => val.length === 5
-    ),
-});
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -275,6 +264,22 @@ export const HomePage: React.FC = () => {
 
   // Television Fee is divided by 3 since three households are involved
   const televisionFeePriceNEW = SettingsData.meterSettings[0].televisionFee / 3;
+
+  let schema = yup.object().shape({
+    readingMeterValue: yup
+      .string()
+      .required("Meter Value is required.")
+      .test(
+        "Meter Value",
+        "Must be exactly 5 characters.",
+        (val) => val.length === 5
+      )
+      .test(
+        "Meter Value",
+        `Value must be grater then: ${readingMeterValueNEW}`,
+        (val) => val >= readingMeterValueNEW
+      ),
+  });
 
   function scrollToForm(id: string) {
     document?.getElementById(id)?.scrollIntoView({ behavior: "smooth" });

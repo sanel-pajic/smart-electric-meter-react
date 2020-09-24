@@ -864,7 +864,9 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           </Typography>
         )}
         {editing ? (
-          <Divider className={classes.dividerMediaEditing} />
+          !matches ? (
+            <Divider className={classes.dividerMediaEditing} />
+          ) : undefined
         ) : (
           <Divider
             className={
