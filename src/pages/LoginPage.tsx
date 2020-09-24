@@ -226,7 +226,7 @@ export const LoginPage: React.FC = () => {
                     localStorage.setItem("token", res.data.login.token);
                     localStorage.setItem("userId", res.data.login.userId);
                     setAuthorized(true);
-                    history.push("/authorize");
+                    history.push("https://smart-electric-meter-app.netlify.app/authorize");
                     store.setState({
                       authorized: true,
                       token: res.data.login.token,

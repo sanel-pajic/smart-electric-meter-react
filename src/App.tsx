@@ -87,7 +87,11 @@ const App: React.FC = () => {
                 path="https://smart-electric-meter-app.netlify.app/authorize"
                 component={AuthorizePage}
               />
-              <Route exact path="/" component={LoginPage} />
+              <Route
+                exact
+                path="https://smart-electric-meter-app.netlify.app/"
+                component={LoginPage}
+              />
               <Route
                 exact
                 path="https://smart-electric-meter-app.netlify.app/home"
