@@ -84,27 +84,27 @@ const App: React.FC = () => {
             <Switch>
               <Route
                 exact
-                path="https://smart-electric-meter-app.netlify.app/authorize"
+                path="/authorize"
                 component={AuthorizePage}
               />
               <Route
                 exact
-                path="https://smart-electric-meter-app.netlify.app/"
+                path="/"
                 component={LoginPage}
               />
               <Route
                 exact
-                path="https://smart-electric-meter-app.netlify.app/home"
+                path="/home"
                 component={HomePage}
               />
               <Route
                 exact
-                path="https://smart-electric-meter-app.netlify.app/statistics"
+                path="/statistics"
                 component={MeterMonthlyReviewPage}
               />
               <Route
                 exact
-                path="https://smart-electric-meter-app.netlify.app/settings"
+                path="/settings"
                 component={Settings}
               />
               <Route render={() => <Error />} />

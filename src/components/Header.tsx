@@ -73,7 +73,7 @@ export function logout(
   setAuthorized(false);
   localStorage.clear();
   apolloclient.clearStore();
-  history.push("https://smart-electric-meter-app.netlify.app/");
+  history.push("/");
   window.location.reload();
 }
 
@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
   const { setAuthorized } = useContext(CurrentUserContext);
 
   function handleClick() {
-    history.push("https://smart-electric-meter-app.netlify.app/authorize");
+    history.push("/authorize");
   }
 
   const { data, loading } = useQuery(CURRENT_USER_QUERY, {

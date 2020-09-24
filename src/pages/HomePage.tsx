@@ -524,7 +524,7 @@ export const HomePage: React.FC = () => {
         <Divider className={classes.dividerHome} />
         <TableMeterData data={MeterReadingsData} />
         <Button
-          onClick={() => history.push("https://smart-electric-meter-app.netlify.app/statistics")}
+          onClick={() => history.push("/statistics")}
           size="large"
           className={classes.buttonStatistics}
           variant="outlined"
