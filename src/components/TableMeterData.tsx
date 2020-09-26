@@ -105,7 +105,7 @@ export const TableMeterData: React.FC<{ data: { [key: string]: any } }> = ({
     return <ErrorLoading />;
   }
   if (errorEditMeterReading) {
-    alert(errorEditMeterReading);
+    console.log(errorEditMeterReading);
   }
 
   function handleMonthYear(dateString: string) {

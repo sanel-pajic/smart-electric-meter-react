@@ -82,31 +82,15 @@ const App: React.FC = () => {
           <BrowserRouter>
             <Header />
             <Switch>
-              <Route
-                exact
-                path="/authorize"
-                component={AuthorizePage}
-              />
-              <Route
-                exact
-                path="/"
-                component={LoginPage}
-              />
-              <Route
-                exact
-                path="/home"
-                component={HomePage}
-              />
+              <Route exact path="/authorize" component={AuthorizePage} />
+              <Route exact path="/" component={LoginPage} />
+              <Route exact path="/home" component={HomePage} />
               <Route
                 exact
                 path="/statistics"
                 component={MeterMonthlyReviewPage}
               />
-              <Route
-                exact
-                path="/settings"
-                component={Settings}
-              />
+              <Route exact path="/settings" component={Settings} />
               <Route render={() => <Error />} />
             </Switch>
             <Footer
