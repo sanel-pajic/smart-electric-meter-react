@@ -1,10 +1,8 @@
 import React, { useState, useMemo } from "react";
-import { HomePage } from "./pages/HomePage";
 import { Error } from "./pages/Error";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
-import { LoginPage } from "./pages/LoginPage";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { AuthorizePage } from "./pages/AuthorizePage";

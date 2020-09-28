@@ -226,7 +226,7 @@ export const LoginPage: React.FC = () => {
                     localStorage.setItem("token", res.data.login.token);
                     localStorage.setItem("userId", res.data.login.userId);
                     setAuthorized(true);
-                    history.push("/authorize");
+                    history.go(0);
                     store.setState({
                       authorized: true,
                       token: res.data.login.token,
