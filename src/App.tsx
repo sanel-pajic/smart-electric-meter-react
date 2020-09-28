@@ -82,9 +82,7 @@ const App: React.FC = () => {
           <BrowserRouter>
             <Header />
             <Switch>
-              <Route exact path="/authorize" component={AuthorizePage} />
-              <Route exact path="/" component={LoginPage} />
-              <Route exact path="/home" component={HomePage} />
+              <Route exact path="/" component={AuthorizePage} />
               <Route
                 exact
                 path="/statistics"
