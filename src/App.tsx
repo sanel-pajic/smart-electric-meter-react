@@ -7,7 +7,6 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { AuthorizePage } from "./pages/AuthorizePage";
 import { MeterMonthlyReviewPage } from "./pages/MeterMonthlyReviewPage";
-import { Settings } from "./components/Settings";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -86,7 +85,6 @@ const App: React.FC = () => {
                 path="/statistics"
                 component={MeterMonthlyReviewPage}
               />
-              <Route exact path="/settings" component={Settings} />
               <Route render={() => <Error />} />
             </Switch>
             <Footer

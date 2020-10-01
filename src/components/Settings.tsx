@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
   },
   paperMedia: {
-    width: 380,
+    width: 360,
     height: 550,
     display: "flex",
     flexDirection: "column",
@@ -198,12 +198,28 @@ const useStyles = makeStyles((theme) => ({
     right: 65,
     marginTop: 15,
   },
+  divSettingMediaEditing: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 85,
+    marginTop: 15,
+  },
   divSettingMediaNetworkFee: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
     right: 65,
+    bottom: 20,
+  },
+  divSettingMediaNetworkFeeEditing: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 85,
     bottom: 20,
   },
   divSettingTwo: {
@@ -222,12 +238,29 @@ const useStyles = makeStyles((theme) => ({
     right: 43,
     bottom: 10,
   },
+  divSettingTwoMediaEditing: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 63,
+    bottom: 10,
+  },
+
   divSettingTwoMediaMeasurementLocationNetworkFee: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
     right: 43,
+    bottom: 30,
+  },
+  divSettingTwoMediaMeasurementLocationNetworkFeeEditing: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 63,
     bottom: 30,
   },
   divSettingThree: {
@@ -246,6 +279,14 @@ const useStyles = makeStyles((theme) => ({
     right: 53,
     bottom: 45,
   },
+  divSettingThreeMediaEditing: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 73,
+    bottom: 45,
+  },
   divSettingFour: {
     display: "flex",
     justifyContent: "center",
@@ -260,6 +301,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     position: "relative",
     right: 33,
+    bottom: 55,
+  },
+  divSettingFourMediaEditing: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: 53,
     bottom: 55,
   },
   typographyTitle: { position: "relative", right: 45 },
@@ -370,49 +419,49 @@ const useStyles = makeStyles((theme) => ({
   },
   editingTextFieldMedia: {
     position: "relative",
-    left: 100,
+    left: 130,
     bottom: 40,
     width: 100,
     height: 18,
   },
   editingTextFieldMediaOne: {
     position: "relative",
-    left: 130,
+    left: 115,
     bottom: 40,
     width: 100,
     height: 18,
   },
   editingTextFieldMediaTwo: {
     position: "relative",
-    left: 130,
+    left: 115,
     bottom: 55,
     width: 100,
     height: 18,
   },
   editingTextFieldMediaThree: {
     position: "relative",
-    left: 130,
+    left: 115,
     bottom: 60,
     width: 100,
     height: 18,
   },
   editingTextFieldMediaFour: {
     position: "relative",
-    left: 130,
+    left: 115,
     bottom: 75,
     width: 100,
     height: 18,
   },
   editingTextFieldMediaFive: {
     position: "relative",
-    left: 130,
+    left: 115,
     bottom: 90,
     width: 100,
     height: 18,
   },
   editingTextFieldMediaSix: {
     position: "relative",
-    left: 130,
+    left: 115,
     bottom: 95,
     width: 100,
     height: 18,
@@ -421,9 +470,10 @@ const useStyles = makeStyles((theme) => ({
 
 const ID_SETTINGS = process.env.REACT_APP_SETTINGS_ID;
 
-export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
-  data,
-}) => {
+export const Settings: React.FC<{
+  data: { [key: string]: any };
+  editingCallback: any;
+}> = ({ data, editingCallback }) => {
   const classes = useStyles();
   const [editing, setEditing] = useState(false);
   const theme = useTheme();
@@ -537,7 +587,15 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           </Typography>
         </div>
         <Divider className={matches ? classes.divider : classes.dividerMedia} />
-        <div className={matches ? classes.divSetting : classes.divSettingMedia}>
+        <div
+          className={
+            matches
+              ? classes.divSetting
+              : !editing
+              ? classes.divSettingMedia
+              : classes.divSettingMediaEditing
+          }
+        >
           <ElectricityIcon
             className={
               matches ? classes.electricityIcon : classes.electricityIconMedia
@@ -589,7 +647,11 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
 
         <div
           className={
-            matches ? classes.divSettingTwo : classes.divSettingTwoMedia
+            matches
+              ? classes.divSettingTwo
+              : !editing
+              ? classes.divSettingTwoMedia
+              : classes.divSettingTwoMediaEditing
           }
         >
           <div className={classes.imageDivTwo}>
@@ -649,7 +711,11 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
 
         <div
           className={
-            matches ? classes.divSetting : classes.divSettingMediaNetworkFee
+            matches
+              ? classes.divSetting
+              : !editing
+              ? classes.divSettingMediaNetworkFee
+              : classes.divSettingMediaNetworkFeeEditing
           }
         >
           <NetworkFee
@@ -710,7 +776,9 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
           className={
             matches
               ? classes.divSettingTwo
-              : classes.divSettingTwoMediaMeasurementLocationNetworkFee
+              : !editing
+              ? classes.divSettingTwoMediaMeasurementLocationNetworkFee
+              : classes.divSettingTwoMediaMeasurementLocationNetworkFeeEditing
           }
         >
           <div className={classes.imageDiv}>
@@ -769,7 +837,11 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
 
         <div
           className={
-            matches ? classes.divSettingThree : classes.divSettingThreeMedia
+            matches
+              ? classes.divSettingThree
+              : !editing
+              ? classes.divSettingThreeMedia
+              : classes.divSettingThreeMediaEditing
           }
         >
           <WindMill className={classes.windMill} />
@@ -823,7 +895,11 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
 
         <div
           className={
-            matches ? classes.divSettingFour : classes.divSettingFourMedia
+            matches
+              ? classes.divSettingFour
+              : !editing
+              ? classes.divSettingFourMedia
+              : classes.divSettingFourMediaEditing
           }
         >
           <TelevisionFee className={classes.televisionFee} fontSize="small" />
@@ -910,6 +986,7 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
                       alert(error);
                     });
                     setEditing(!editing);
+                    editingCallback(false);
                   }}
                 />
               </div>
@@ -928,6 +1005,7 @@ export const Settings: React.FC<{ data: { [key: string]: any } }> = ({
                     );
                     setEditedRenewableSourcesFeePrice(renewableSourcesFeePrice);
                     setEditedTelevisionFee(televisionFeePrice);
+                    editingCallback(!editing);
                   }}
                 />
               </div>

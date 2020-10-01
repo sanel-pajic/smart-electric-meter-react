@@ -195,6 +195,14 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 250,
       height: 550,
     },
+    paperModalMedia: {
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(1, 4, 0),
+      width: 300,
+      height: 550,
+    },
   })
 );
 
@@ -209,6 +217,7 @@ export const HomePage: React.FC = () => {
   const history = useHistory();
   const accessGrant = useProtectedPath();
   const [open, setOpen] = useState(false);
+  const [editingCallback, setEditingCallback] = useState(false);
 
   const { data: MeterReadingsData, loading: MeterReadingsLoading } = useQuery(
     READINGS_QUERY,
@@ -299,6 +308,10 @@ export const HomePage: React.FC = () => {
     setOpen(false);
   };
 
+  const handleEditingCallback = () => {
+    setEditingCallback(true);
+  };
+
   return (
     <div className={classes.rootDiv}>
       <Paper className={matches ? classes.paper : classes.paperMedia}>
@@ -330,8 +343,17 @@ export const HomePage: React.FC = () => {
                     }}
                   >
                     <Fade in={open}>
-                      <div className={classes.paperModal}>
-                        <Settings data={SettingsData} />
+                      <div
+                        className={
+                          !editingCallback
+                            ? classes.paperModal
+                            : classes.paperModalMedia
+                        }
+                      >
+                        <Settings
+                          data={SettingsData}
+                          editingCallback={handleEditingCallback}
+                        />
                       </div>
                     </Fade>
                   </Modal>
@@ -508,7 +530,10 @@ export const HomePage: React.FC = () => {
           </div>
           {matches ? (
             <div className={classes.settings}>
-              <Settings data={SettingsData} />
+              <Settings
+                data={SettingsData}
+                editingCallback={handleEditingCallback}
+              />
             </div>
           ) : null}
         </div>
