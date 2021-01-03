@@ -16,6 +16,7 @@ import logo from "../images/icon_logo.png";
 import Modal from "@material-ui/core/Modal";
 import { CurrentUserContext } from "../App";
 import { store } from "../components/store";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ValidationTextField = withStyles({
   root: {
@@ -125,6 +126,25 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
+  avatarTypographyDiv:{
+    display:"flex",
+    flexDirection:"column",
+    alignItems:"center",
+    justifyContent:"center"
+  },
+  progressTypographyDiv:{
+    display:"flex",
+    flexDirection:"column",
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop:20
+  },
+  progress: {
+    display: 'flex',
+    '& > * + *': {
+      marginLeft: theme.spacing(2),
+    },
+  },
 }));
 
 export const LoginPage: React.FC = () => {
@@ -141,6 +161,7 @@ export const LoginPage: React.FC = () => {
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open] = React.useState(true);
+  const [loggingInState, setLoggingInState] = useState(true);
 
   const [login, { error }] = useMutation(LOGIN_MUTATION);
 
@@ -158,12 +179,23 @@ export const LoginPage: React.FC = () => {
         style={modalStyle}
         className={matches ? classes.paperModal : classes.paperModalMedia}
       >
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        {loggingInState ? 
+       <div className={classes.avatarTypographyDiv}>
+       <Avatar className={classes.avatar}>
+       <LockOutlinedIcon />
+     </Avatar>
+     <Typography component="h1" variant="h5">
+       Sign in
+     </Typography>
+     </div>: <div className={classes.progressTypographyDiv}>
+       <CircularProgress color="secondary" size={50} /> 
         <Typography component="h1" variant="h5">
-          Sign in
+          Loading ...
         </Typography>
+     </div>
+      }
+       
+  
         <form className={classes.form} noValidate>
           <ValidationTextField
             autoComplete="email"
@@ -213,6 +245,7 @@ export const LoginPage: React.FC = () => {
                 matches ? classes.submitButton : classes.submitButtonMedia
               }
               onClick={(e) => {
+                setLoggingInState(false);
                 e.preventDefault();
                 setEmail("");
                 setPassword("");
