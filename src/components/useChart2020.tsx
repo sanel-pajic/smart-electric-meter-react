@@ -4,7 +4,7 @@ import { READINGS_QUERY } from "../graphql-queries-mutations/queries";
 import { useQuery } from "@apollo/react-hooks";
 import { CircularLoading } from "./CircularLoading";
 
-export const useChart = () => {
+export const useChart2020 = () => {
   const { data, loading } = useQuery(READINGS_QUERY, {
     fetchPolicy: "cache-and-network",
   });
