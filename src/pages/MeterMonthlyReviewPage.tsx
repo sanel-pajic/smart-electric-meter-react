@@ -19,6 +19,7 @@ import { useProtectedPath } from "../components/useProtectedPath";
 import { Redirect, Link } from "react-router-dom";
 import { deepOrange } from "@material-ui/core/colors";
 import { useChart2021 } from "../components/useChart2021";
+import { useChart2022 } from "../components/useChart2022";
 
 const useStyles = makeStyles(() => ({
   root: { height: "50%", width: "80%" },
@@ -70,6 +71,11 @@ export const MeterMonthlyReviewPage = (props: {
 
   const { dataChart: dataChart2020, optionsChart: optionsChart2020 }: any = useChart2020();
   const { dataChart: dataChart2021, optionsChart: optionsChart2021 }: any = useChart2021();
+  const { dataChart: dataChart2022, optionsChart: optionsChart2022 }: any = useChart2022();
+
+  if (dataChart2022 === undefined) {
+    return <CircularLoading />;
+  }
 
   if (dataChart2021 === undefined) {
     return <CircularLoading />;
@@ -83,6 +89,31 @@ export const MeterMonthlyReviewPage = (props: {
 
   return (
     <div className={matches ? classes.mainDiv : classes.mainDivMedia}>
+
+<Card {...rest} className={clsx(classes.root, className)} component="div">
+        <div className={matches ? undefined : classes.typographyDiv}>
+          <Typography
+            className={matches ? classes.cardHeader : classes.cardHeaderMedia}
+            variant={matches ? "h5" : "overline"}
+          >
+            Consumption Electricity Per Month - Year 2022
+          </Typography>
+        </div>
+
+        <Divider />
+        <CardContent>
+          <div className={classes.chartContainer}>
+            <Bar data={dataChart2022} options={optionsChart2022} />
+          </div>
+        </CardContent>
+        <Divider />
+        <CardActions className={classes.actions}>
+          <Typography variant={matches ? "h5" : "h6"} color="error">
+            Year - 2022
+          </Typography>
+        </CardActions>
+      </Card>
+      <div className={classes.containerBetweenCards}/>
        <Card {...rest} className={clsx(classes.root, className)} component="div">
         <div className={matches ? undefined : classes.typographyDiv}>
           <Typography
